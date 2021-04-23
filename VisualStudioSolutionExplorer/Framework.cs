@@ -3,7 +3,7 @@
     /// <summary>
     /// Defines a framework supported by the project.
     /// </summary>
-    internal class Framework
+    public class Framework
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Framework"/> class.

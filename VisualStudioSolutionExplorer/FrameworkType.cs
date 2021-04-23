@@ -3,7 +3,7 @@
     /// <summary>
     /// One of the major framworks defined by Microsoft.
     /// </summary>
-    internal enum FrameworkType
+    public enum FrameworkType
     {
         /// <summary>
         /// No framwork.

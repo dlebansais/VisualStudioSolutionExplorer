@@ -9,7 +9,7 @@
     /// <summary>
     /// Reads and parses a solution file.
     /// </summary>
-    internal class Solution
+    public class Solution
     {
         #region Init
         static Solution()

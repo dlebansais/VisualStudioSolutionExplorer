@@ -11,7 +11,7 @@
     /// Reads and parses a project file.
     /// </summary>
     [DebuggerDisplay("{ProjectName}, {RelativePath}, {ProjectGuid}")]
-    internal class Project
+    public class Project
     {
         #region Init
         static Project()

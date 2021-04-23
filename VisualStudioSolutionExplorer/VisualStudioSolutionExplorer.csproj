@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net48;net5.0</TargetFrameworks>
@@ -10,9 +10,9 @@
     <Product />
     <Description>Explore .sln files</Description>
     <Copyright>Copyright © 2020 David Le Bansais</Copyright>
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.1</AssemblyVersion>
-    <FileVersion>1.0.0.1</FileVersion>
+    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.1.2</AssemblyVersion>
+    <FileVersion>1.0.1.2</FileVersion>
     <RepositoryUrl>https://github.com/dlebansais/VisualStudioSolutionExplorer</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <NeutralLanguage>en-US</NeutralLanguage>

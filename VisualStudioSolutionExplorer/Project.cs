@@ -78,14 +78,24 @@
         public bool HasVersion => Version.Length > 0;
 
         /// <summary>
+        /// Gets the assembly version.
+        /// </summary>
+        public string AssemblyVersion { get; private set; } = string.Empty;
+
+        /// <summary>
         /// Gets a value indicating whether the project has a valid assembly version.
         /// </summary>
-        public bool IsAssemblyVersionValid { get; private set; }
+        public bool IsAssemblyVersionValid => AssemblyVersion.Length > 0;
+
+        /// <summary>
+        /// Gets the file version.
+        /// </summary>
+        public string FileVersion { get; private set; } = string.Empty;
 
         /// <summary>
         /// Gets a value indicating whether the project has a valid file version.
         /// </summary>
-        public bool IsFileVersionValid { get; private set; }
+        public bool IsFileVersionValid => FileVersion.Length > 0;
 
         /// <summary>
         /// Gets the project author.
@@ -127,27 +137,31 @@
         /// <summary>
         /// Parses a loaded project.
         /// </summary>
-        /// <param name="hasErrors">Set to true upon return if an error was found.</param>
         /// <param name="warningOrErrorText">A warning or error text upon return.</param>
-        public void Parse(ref bool hasErrors, out string warningOrErrorText)
+        /// <returns>True upon return if an error was found; otherwise, false.</returns>
+        public bool Parse(out string warningOrErrorText)
         {
             warningOrErrorText = string.Empty;
-            ParsePropertyGroupElements(out string AssemblyVersion, out string FileVersion);
+            bool HasErrors = false;
+
+            ParsePropertyGroupElements(out string LocalAssemblyVersion, out string LocalFileVersion);
 
             if (HasVersion)
             {
-                IsAssemblyVersionValid = AssemblyVersion.StartsWith(Version, StringComparison.InvariantCulture);
-                if (!IsAssemblyVersionValid)
+                if (LocalAssemblyVersion.StartsWith(Version, StringComparison.InvariantCulture))
+                    AssemblyVersion = LocalAssemblyVersion;
+                else
                 {
-                    hasErrors = true;
-                    warningOrErrorText = $"{AssemblyVersion} not compatible with {Version}";
+                    HasErrors = true;
+                    warningOrErrorText = $"{LocalAssemblyVersion} not compatible with {Version}";
                 }
 
-                IsFileVersionValid = FileVersion.StartsWith(Version, StringComparison.InvariantCulture);
-                if (!IsFileVersionValid)
+                if (LocalFileVersion.StartsWith(Version, StringComparison.InvariantCulture))
+                    FileVersion = LocalFileVersion;
+                else
                 {
-                    hasErrors = true;
-                    warningOrErrorText = $"{FileVersion} not compatible with {Version}";
+                    HasErrors = true;
+                    warningOrErrorText = $"{LocalFileVersion} not compatible with {Version}";
                 }
             }
             else
@@ -159,6 +173,8 @@
                 ParseTargetFrameworks(ParsedFrameworkList);
 
             FrameworkList = ParsedFrameworkList.AsReadOnly();
+
+            return HasErrors;
         }
         #endregion
 

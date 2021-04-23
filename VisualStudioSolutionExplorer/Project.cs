@@ -254,9 +254,9 @@
                 ParseTargetFramework(parsedFrameworkList, Framework);
         }
 
-        private void ParseTargetFramework(List<Framework> parsedFrameworkList, string framework)
+        private void ParseTargetFramework(List<Framework> parsedFrameworkList, string frameworkName)
         {
-            string FrameworkString = framework;
+            string FrameworkString = frameworkName;
 
             string NetStandardPattern = "netstandard";
             string NetCorePattern = "netcoreapp";
@@ -283,11 +283,11 @@
             }
 
             if (FrameworkString.StartsWith(NetStandardPattern, StringComparison.InvariantCulture) && ParseNetVersion(FrameworkString.Substring(NetStandardPattern.Length), out Major, out Minor))
-                NewFramework = new Framework(FrameworkType.NetStandard, Major, Minor, Moniker);
+                NewFramework = new Framework(frameworkName, FrameworkType.NetStandard, Major, Minor, Moniker);
             else if (FrameworkString.StartsWith(NetCorePattern, StringComparison.InvariantCulture) && ParseNetVersion(FrameworkString.Substring(NetCorePattern.Length), out Major, out Minor))
-                NewFramework = new Framework(FrameworkType.NetCore, Major, Minor, Moniker);
+                NewFramework = new Framework(frameworkName, FrameworkType.NetCore, Major, Minor, Moniker);
             else if (FrameworkString.StartsWith(NetFrameworkPattern, StringComparison.InvariantCulture) && ParseNetVersion(FrameworkString.Substring(NetFrameworkPattern.Length), out Major, out Minor))
-                NewFramework = new Framework(FrameworkType.NetFramework, Major, Minor, Moniker);
+                NewFramework = new Framework(frameworkName, FrameworkType.NetFramework, Major, Minor, Moniker);
 
             if (NewFramework != null)
                 parsedFrameworkList.Add(NewFramework);

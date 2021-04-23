@@ -8,17 +8,24 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="Framework"/> class.
         /// </summary>
+        /// <param name="name">The framework namr.</param>
         /// <param name="type">The framework type.</param>
         /// <param name="major">The framework major version.</param>
         /// <param name="minor">The framework minor version.</param>
         /// <param name="moniker">The target framework moniker (TFM).</param>
-        public Framework(FrameworkType type, int major, int minor, FrameworkMoniker moniker)
+        public Framework(string name, FrameworkType type, int major, int minor, FrameworkMoniker moniker)
         {
+            Name = name;
             Type = type;
             Major = major;
             Minor = minor;
             Moniker = moniker;
         }
+
+        /// <summary>
+        /// Gets the framework type.
+        /// </summary>
+        public string Name { get; init; }
 
         /// <summary>
         /// Gets the framework type.

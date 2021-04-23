@@ -46,5 +46,14 @@
         /// Gets the target framework moniker (TFM).
         /// </summary>
         public FrameworkMoniker Moniker { get; init; }
+
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>The current object as a string.</returns>
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

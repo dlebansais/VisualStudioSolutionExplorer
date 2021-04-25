@@ -306,7 +306,7 @@
             return HasErrors;
         }
 
-        private bool IsVersionCompatible(string shortVersion, string longVersion)
+        private bool IsVersionCompatible(string longVersion, string shortVersion)
         {
             string ComparedText = (longVersion.Length <= shortVersion.Length) ? shortVersion : $"{shortVersion}.";
             return longVersion.StartsWith(ComparedText, StringComparison.InvariantCulture);

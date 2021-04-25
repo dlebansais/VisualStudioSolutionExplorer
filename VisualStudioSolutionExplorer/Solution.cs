@@ -64,7 +64,7 @@
             for (int i = 0; i < ProjetctArray.Length; i++)
             {
                 Contract.RequireNotNull(ProjetctArray.GetValue(i), out object SolutionProject);
-                Project NewProject = new Project(SolutionProject);
+                Project NewProject = new Project(this, SolutionProject);
 
                 ProjectList.Add(NewProject);
             }

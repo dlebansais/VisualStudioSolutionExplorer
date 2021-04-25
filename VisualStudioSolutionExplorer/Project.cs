@@ -3,14 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
     using System.Reflection;
     using System.Xml.Linq;
-    using Contracts;
 
     /// <summary>
     /// Reads and parses a project file.
     /// </summary>
-    [DebuggerDisplay("{ProjectName}, {RelativePath}, {ProjectGuid}")]
+    [DebuggerDisplay("{ProjectName}, {RelativePath}, {ProjectType}")]
     public class Project
     {
         #region Init
@@ -22,6 +22,13 @@
             ProjectInSolutionRelativePath = ReflectionTools.GetTypeProperty(ProjectInSolutionType, nameof(RelativePath));
             ProjectInSolutionProjectGuid = ReflectionTools.GetTypeProperty(ProjectInSolutionType, nameof(ProjectGuid));
             ProjectInSolutionProjectType = ReflectionTools.GetTypeProperty(ProjectInSolutionType, nameof(ProjectType));
+            ProjectInSolutionExtension = ReflectionTools.GetTypeProperty(ProjectInSolutionType, nameof(Extension));
+            ProjectInSolutionDependencies = ReflectionTools.GetTypeProperty(ProjectInSolutionType, nameof(Dependencies));
+            ProjectInSolutionProjectReferences = ReflectionTools.GetTypeProperty(ProjectInSolutionType, nameof(ProjectReferences));
+            ProjectInSolutionParentProjectGuid = ReflectionTools.GetTypeProperty(ProjectInSolutionType, nameof(ParentProjectGuid));
+            ProjectInSolutionProjectConfigurations = ReflectionTools.GetTypeProperty(ProjectInSolutionType, nameof(ProjectConfigurations));
+            ProjectInSolutionDependencyLevel = ReflectionTools.GetTypeProperty(ProjectInSolutionType, nameof(DependencyLevel));
+            ProjectInSolutionIsStaticLibrary = ReflectionTools.GetTypeProperty(ProjectInSolutionType, nameof(IsStaticLibrary));
         }
 
         private static readonly Type ProjectInSolutionType;
@@ -29,20 +36,91 @@
         private static readonly PropertyInfo ProjectInSolutionRelativePath;
         private static readonly PropertyInfo ProjectInSolutionProjectGuid;
         private static readonly PropertyInfo ProjectInSolutionProjectType;
+        private static readonly PropertyInfo ProjectInSolutionExtension;
+        private static readonly PropertyInfo ProjectInSolutionDependencies;
+        private static readonly PropertyInfo ProjectInSolutionProjectReferences;
+        private static readonly PropertyInfo ProjectInSolutionParentProjectGuid;
+        private static readonly PropertyInfo ProjectInSolutionProjectConfigurations;
+        private static readonly PropertyInfo ProjectInSolutionDependencyLevel;
+        private static readonly PropertyInfo ProjectInSolutionIsStaticLibrary;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Project"/> class.
         /// </summary>
+        /// <param name="solution">The solution containing the project.</param>
         /// <param name="solutionProject">The project as loaded from a solution.</param>
-        public Project(object solutionProject)
+        internal Project(Solution solution, object solutionProject)
         {
+            ParentSolution = solution;
             ProjectName = (string)ReflectionTools.GetPropertyValue(ProjectInSolutionProjectName, solutionProject);
             RelativePath = (string)ReflectionTools.GetPropertyValue(ProjectInSolutionRelativePath, solutionProject);
             ProjectGuid = (string)ReflectionTools.GetPropertyValue(ProjectInSolutionProjectGuid, solutionProject);
 
-            object Type = ReflectionTools.GetPropertyValue(ProjectInSolutionProjectType, solutionProject);
-            Contract.RequireNotNull(Type.ToString(), out string ProjectTypeName);
-            ProjectType = ProjectTypeName;
+            var ProjectTypeValue = ReflectionTools.GetPropertyValue(ProjectInSolutionProjectType, solutionProject);
+            switch (ProjectTypeValue.ToString())
+            {
+                case "Unknown":
+                    ProjectType = ProjectType.Unknown;
+                    break;
+                case "KnownToBeMSBuildFormat":
+                    ProjectType = ProjectType.KnownToBeMSBuildFormat;
+                    break;
+                case "SolutionFolder":
+                    ProjectType = ProjectType.SolutionFolder;
+                    break;
+                case "WebProject":
+                    ProjectType = ProjectType.WebProject;
+                    break;
+                case "WebDeploymentProject":
+                    ProjectType = ProjectType.WebDeploymentProject;
+                    break;
+                case "EtpSubProject":
+                    ProjectType = ProjectType.EtpSubProject;
+                    break;
+                default:
+                    ProjectType = ProjectType.Invalid;
+                    break;
+            }
+
+            Extension = (string)ReflectionTools.GetPropertyValue(ProjectInSolutionExtension, solutionProject);
+
+            System.Collections.IEnumerable DependenciesValue = (System.Collections.IEnumerable)ReflectionTools.GetPropertyValue(ProjectInSolutionDependencies, solutionProject);
+            List<string> DependencyList = new();
+            foreach (string Item in DependenciesValue)
+                DependencyList.Add(Item);
+            Dependencies = DependencyList.AsReadOnly();
+
+            System.Collections.IEnumerable ProjectReferencesValue = (System.Collections.IEnumerable)ReflectionTools.GetPropertyValue(ProjectInSolutionProjectReferences, solutionProject);
+            List<string> ProjectReferenceList = new();
+            foreach (string Item in ProjectReferencesValue)
+                ProjectReferenceList.Add(Item);
+            ProjectReferences = ProjectReferenceList.AsReadOnly();
+
+            object? ParentProjectGuidValue = ProjectInSolutionParentProjectGuid.GetValue(solutionProject);
+            if (ParentProjectGuidValue != null)
+                ParentProjectGuid = (string)ParentProjectGuidValue;
+            else
+                ParentProjectGuid = string.Empty;
+
+            System.Collections.IDictionary ProjectConfigurationsValue = (System.Collections.IDictionary)ReflectionTools.GetPropertyValue(ProjectInSolutionProjectConfigurations, solutionProject);
+            List<Configuration> ConfigurationList = new();
+            foreach (string Key in ProjectConfigurationsValue.Keys)
+            {
+                object? Value = ProjectConfigurationsValue[Key];
+
+                string[] Splits = Key.Split('|');
+                if (Splits.Length >= 2 && Value != null)
+                {
+                    string ConfigurationName = Splits[0];
+                    string PlatformName = Splits[1];
+                    ConfigurationList.Add(new Configuration(this, Value, ConfigurationName, PlatformName));
+                }
+            }
+
+            ProjectConfigurations = ConfigurationList.AsReadOnly();
+
+            DependencyLevel = (int)ReflectionTools.GetPropertyValue(ProjectInSolutionDependencyLevel, solutionProject);
+            IsStaticLibrary = (bool)ReflectionTools.GetPropertyValue(ProjectInSolutionIsStaticLibrary, solutionProject);
         }
         #endregion
 
@@ -65,7 +143,52 @@
         /// <summary>
         /// Gets the project type.
         /// </summary>
-        public string ProjectType { get; init; }
+        public ProjectType ProjectType { get; private set; }
+
+        /// <summary>
+        /// Gets the extension.
+        /// </summary>
+        public string Extension { get; init; }
+
+        /// <summary>
+        /// Gets the dependencies.
+        /// </summary>
+        public IReadOnlyCollection<string> Dependencies { get; init; }
+
+        /// <summary>
+        /// Gets the project references.
+        /// </summary>
+        public IReadOnlyCollection<string> ProjectReferences { get; init; }
+
+        /// <summary>
+        /// Gets the parent project GUID.
+        /// </summary>
+        public string ParentProjectGuid { get; init; }
+
+        /// <summary>
+        /// Gets the parent solution.
+        /// </summary>
+        public Solution ParentSolution { get; init; }
+
+        /// <summary>
+        /// Gets the project configurations.
+        /// </summary>
+        public IReadOnlyCollection<Configuration> ProjectConfigurations { get; init; }
+
+        /// <summary>
+        /// Gets the dependency level.
+        /// </summary>
+        public int DependencyLevel { get; init; }
+
+        /// <summary>
+        /// Gets a value indicating whether the project is a static library.
+        /// </summary>
+        public bool IsStaticLibrary { get; init; }
+
+        /// <summary>
+        /// Gets the project output type.
+        /// </summary>
+        public string OutputType { get; private set; } = string.Empty;
 
         /// <summary>
         /// Gets the project version.
@@ -135,37 +258,68 @@
 
         #region Client Interface
         /// <summary>
-        /// Parses a loaded project.
+        /// Loads project details from a file.
+        /// </summary>
+        /// <param name="fileName">The path to the file.</param>
+        public void LoadDetails(string fileName)
+        {
+            using FileStream Stream = new(fileName, FileMode.Open, FileAccess.Read);
+            ParsePropertyGroupElements(Stream);
+        }
+
+        /// <summary>
+        /// Loads project details from a stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        public void LoadDetails(Stream stream)
+        {
+            ParsePropertyGroupElements(stream);
+        }
+
+        /// <summary>
+        /// Checks a loaded for version consistency.
         /// </summary>
         /// <param name="warningOrErrorText">A warning or error text upon return.</param>
         /// <returns>True upon return if an error was found; otherwise, false.</returns>
-        public bool Parse(out string warningOrErrorText)
+        public bool CheckVersionConsistency(out string warningOrErrorText)
         {
             warningOrErrorText = string.Empty;
             bool HasErrors = false;
 
-            ParsePropertyGroupElements(out string LocalAssemblyVersion, out string LocalFileVersion);
-
             if (HasVersion)
             {
-                if (LocalAssemblyVersion.StartsWith(Version, StringComparison.InvariantCulture))
-                    AssemblyVersion = LocalAssemblyVersion;
-                else
+                if (!IsVersionCompatible(AssemblyVersion, Version))
                 {
                     HasErrors = true;
-                    warningOrErrorText = $"{LocalAssemblyVersion} not compatible with {Version}";
+                    warningOrErrorText = $"{AssemblyVersion} not compatible with {Version}";
                 }
 
-                if (LocalFileVersion.StartsWith(Version, StringComparison.InvariantCulture))
-                    FileVersion = LocalFileVersion;
-                else
+                if (!IsVersionCompatible(FileVersion, Version))
                 {
                     HasErrors = true;
-                    warningOrErrorText = $"{LocalFileVersion} not compatible with {Version}";
+                    warningOrErrorText = $"{FileVersion} not compatible with {Version}";
                 }
             }
             else
                 warningOrErrorText = "Ignored because no version";
+
+            return HasErrors;
+        }
+
+        private bool IsVersionCompatible(string shortVersion, string longVersion)
+        {
+            string ComparedText = (longVersion.Length <= shortVersion.Length) ? shortVersion : $"{shortVersion}.";
+            return longVersion.StartsWith(ComparedText, StringComparison.InvariantCulture);
+        }
+        #endregion
+
+        #region Implementation
+        private void ParsePropertyGroupElements(Stream stream)
+        {
+            XElement Root = XElement.Load(stream);
+
+            foreach (XElement ProjectElement in Root.Descendants("PropertyGroup"))
+                ParseProjectElement(ProjectElement);
 
             List<Framework> ParsedFrameworkList = new List<Framework>();
 
@@ -173,33 +327,46 @@
                 ParseTargetFrameworks(ParsedFrameworkList);
 
             FrameworkList = ParsedFrameworkList.AsReadOnly();
-
-            return HasErrors;
-        }
-        #endregion
-
-        #region Implementation
-        private void ParsePropertyGroupElements(out string assemblyVersion, out string fileVersion)
-        {
-            Version = string.Empty;
-
-            assemblyVersion = string.Empty;
-            fileVersion = string.Empty;
-
-            XElement Root = XElement.Load(RelativePath);
-
-            foreach (XElement ProjectElement in Root.Descendants("PropertyGroup"))
-                ParseProjectElement(ProjectElement, ref assemblyVersion, ref fileVersion);
         }
 
-        private void ParseProjectElement(XElement projectElement, ref string assemblyVersion, ref string fileVersion)
+        private void ParseProjectElement(XElement projectElement)
         {
-            ParseProjectElementVersion(projectElement, ref assemblyVersion, ref fileVersion);
+            ParseProjectElementOutputType(projectElement);
+            ParseProjectElementVersion(projectElement);
             ParseProjectElementInfo(projectElement);
             ParseProjectElementFrameworks(projectElement);
         }
 
-        private void ParseProjectElementVersion(XElement projectElement, ref string assemblyVersion, ref string fileVersion)
+        private void ParseProjectElementOutputType(XElement projectElement)
+        {
+            XElement? OutputTypeElement = projectElement.Element("OutputType");
+            if (OutputTypeElement != null)
+                OutputType = OutputTypeElement.Value;
+
+            if (ProjectType == ProjectType.Unknown)
+            {
+                if (OutputType.Length == 0 || OutputType == "Library")
+                    ProjectType = ProjectType.Library;
+                else if (OutputType == "WinExe")
+                    ProjectType = ProjectType.WinExe;
+                else if (OutputType == "Exe")
+                {
+                    bool IsUserInterface = false;
+
+                    XElement? UseWPFElement = projectElement.Element("UseWPF");
+                    if (UseWPFElement != null)
+                        IsUserInterface |= UseWPFElement.Value.ToUpper() == "TRUE";
+
+                    XElement? UseWindowsFormsElement = projectElement.Element("UseWindowsForms");
+                    if (UseWindowsFormsElement != null)
+                        IsUserInterface |= UseWindowsFormsElement.Value.ToUpper() == "TRUE";
+
+                    ProjectType = IsUserInterface ? ProjectType.WinExe : ProjectType.Console;
+                }
+            }
+        }
+
+        private void ParseProjectElementVersion(XElement projectElement)
         {
             XElement? VersionElement = projectElement.Element("Version");
             if (VersionElement != null)
@@ -207,11 +374,11 @@
 
             XElement? AssemblyVersionElement = projectElement.Element("AssemblyVersion");
             if (AssemblyVersionElement != null)
-                assemblyVersion = AssemblyVersionElement.Value;
+                AssemblyVersion = AssemblyVersionElement.Value;
 
             XElement? FileVersionElement = projectElement.Element("FileVersion");
             if (FileVersionElement != null)
-                fileVersion = FileVersionElement.Value;
+                FileVersion = FileVersionElement.Value;
         }
 
         private void ParseProjectElementInfo(XElement projectElement)

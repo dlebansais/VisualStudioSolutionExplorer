@@ -186,9 +186,24 @@
         public bool IsStaticLibrary { get; init; }
 
         /// <summary>
+        /// Gets the Sdk type.
+        /// </summary>
+        public SdkType SdkType { get; private set; }
+
+        /// <summary>
         /// Gets the project output type.
         /// </summary>
         public string OutputType { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// Gets a value indicating whether the projct uses WPF.
+        /// </summary>
+        public bool UseWpf { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the projct uses Windows Forms.
+        /// </summary>
+        public bool UseWindowsForms { get; private set; }
 
         /// <summary>
         /// Gets the project version.
@@ -254,6 +269,36 @@
         /// Gets a value indicating whether the project has target frameworks.
         /// </summary>
         public bool HasTargetFrameworks => FrameworkList.Count > 0;
+
+        /// <summary>
+        /// Gets the language version.
+        /// </summary>
+        public string LanguageVersion { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// Gets a value indicating whether the project has nullable enabled.
+        /// </summary>
+        public bool IsNullable { get; private set; }
+
+        /// <summary>
+        /// Gets the neutral langauge.
+        /// </summary>
+        public string NeutralLanguage { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// Gets a value indicating whether project warnings are treated as errors.
+        /// </summary>
+        public bool IsTreatWarningsAsErrors { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the project links to the solution's editor config.
+        /// </summary>
+        public bool IsEditorConfigLinked { get; private set; }
+
+        /// <summary>
+        /// Gets the list of package references.
+        /// </summary>
+        public IReadOnlyList<PackageReference> PackageReferenceList { get; private set; } = new List<PackageReference>().AsReadOnly();
         #endregion
 
         #region Client Interface
@@ -264,7 +309,7 @@
         public void LoadDetails(string fileName)
         {
             using FileStream Stream = new(fileName, FileMode.Open, FileAccess.Read);
-            ParsePropertyGroupElements(Stream);
+            ParseProjectElements(Stream);
         }
 
         /// <summary>
@@ -273,7 +318,7 @@
         /// <param name="stream">The stream.</param>
         public void LoadDetails(Stream stream)
         {
-            ParsePropertyGroupElements(stream);
+            ParseProjectElements(stream);
         }
 
         /// <summary>
@@ -314,12 +359,15 @@
         #endregion
 
         #region Implementation
-        private void ParsePropertyGroupElements(Stream stream)
+        private void ParseProjectElements(Stream stream)
         {
             XElement Root = XElement.Load(stream);
 
+            foreach (XAttribute ProjectAttribute in Root.Attributes())
+                ParseProjectAttribute(ProjectAttribute);
+
             foreach (XElement ProjectElement in Root.Descendants("PropertyGroup"))
-                ParseProjectElement(ProjectElement);
+                ParseProjectPropertyGroup(ProjectElement);
 
             List<Framework> ParsedFrameworkList = new List<Framework>();
 
@@ -327,11 +375,36 @@
                 ParseTargetFrameworks(ParsedFrameworkList);
 
             FrameworkList = ParsedFrameworkList.AsReadOnly();
+
+            List<PackageReference> ParsedPackageReferenceList = new();
+            foreach (XElement ProjectElement in Root.Descendants("ItemGroup"))
+                ParseProjectItemGroup(ParsedPackageReferenceList, ProjectElement);
+
+            PackageReferenceList = ParsedPackageReferenceList.AsReadOnly();
         }
 
-        private void ParseProjectElement(XElement projectElement)
+        private void ParseProjectAttribute(XAttribute projectAttribute)
+        {
+            if (projectAttribute.Name == "Sdk")
+            {
+                switch (projectAttribute.Value)
+                {
+                    default:
+                        break;
+                    case "Microsoft.NET.Sdk":
+                        SdkType = SdkType.Sdk;
+                        break;
+                    case "Microsoft.NET.Sdk.WindowsDesktop":
+                        SdkType = SdkType.WindowsDesktop;
+                        break;
+                }
+            }
+        }
+
+        private void ParseProjectPropertyGroup(XElement projectElement)
         {
             ParseProjectElementOutputType(projectElement);
+            ParseProjectElementOptions(projectElement);
             ParseProjectElementVersion(projectElement);
             ParseProjectElementInfo(projectElement);
             ParseProjectElementFrameworks(projectElement);
@@ -343,6 +416,14 @@
             if (OutputTypeElement != null)
                 OutputType = OutputTypeElement.Value;
 
+            XElement? UseWPFElement = projectElement.Element("UseWPF");
+            if (UseWPFElement != null)
+                UseWpf = UseWPFElement.Value.ToUpper() == "TRUE";
+
+            XElement? UseWindowsFormsElement = projectElement.Element("UseWindowsForms");
+            if (UseWindowsFormsElement != null)
+                UseWindowsForms = UseWindowsFormsElement.Value.ToUpper() == "TRUE";
+
             if (ProjectType == ProjectType.Unknown)
             {
                 if (OutputType.Length == 0 || OutputType == "Library")
@@ -350,20 +431,27 @@
                 else if (OutputType == "WinExe")
                     ProjectType = ProjectType.WinExe;
                 else if (OutputType == "Exe")
-                {
-                    bool IsUserInterface = false;
-
-                    XElement? UseWPFElement = projectElement.Element("UseWPF");
-                    if (UseWPFElement != null)
-                        IsUserInterface |= UseWPFElement.Value.ToUpper() == "TRUE";
-
-                    XElement? UseWindowsFormsElement = projectElement.Element("UseWindowsForms");
-                    if (UseWindowsFormsElement != null)
-                        IsUserInterface |= UseWindowsFormsElement.Value.ToUpper() == "TRUE";
-
-                    ProjectType = IsUserInterface ? ProjectType.WinExe : ProjectType.Console;
-                }
+                    ProjectType = (UseWpf || UseWindowsForms) ? ProjectType.WinExe : ProjectType.Console;
             }
+        }
+
+        private void ParseProjectElementOptions(XElement projectElement)
+        {
+            XElement? LanguageVersionElement = projectElement.Element("LanguageVersion");
+            if (LanguageVersionElement != null)
+                LanguageVersion = LanguageVersionElement.Value;
+
+            XElement? NullableElement = projectElement.Element("Nullable");
+            if (NullableElement != null)
+                IsNullable = NullableElement.Value.ToUpper() == "TRUE";
+
+            XElement? NeutralLanguageElement = projectElement.Element("NeutralLanguage");
+            if (NeutralLanguageElement != null)
+                NeutralLanguage = NeutralLanguageElement.Value;
+
+            XElement? TreatWarningsAsErrorsElement = projectElement.Element("TreatWarningsAsErrors");
+            if (TreatWarningsAsErrorsElement != null)
+                IsTreatWarningsAsErrors = TreatWarningsAsErrorsElement.Value.ToUpper() == "TRUE";
         }
 
         private void ParseProjectElementVersion(XElement projectElement)
@@ -479,6 +567,63 @@
             }
 
             return false;
+        }
+
+        private void ParseProjectItemGroup(List<PackageReference> packageReferenceList, XElement projectElement)
+        {
+            ParseProjectElementEditorConfigLink(projectElement);
+            ParseProjectElementPackageReference(packageReferenceList, projectElement);
+        }
+
+        private void ParseProjectElementEditorConfigLink(XElement projectElement)
+        {
+            XElement? NoneElement = projectElement.Element("None");
+            if (NoneElement != null)
+            {
+                bool IncludeEditorConfig = false;
+                bool LinkEditorConfig = false;
+
+                foreach (XAttribute Attribute in NoneElement.Attributes())
+                {
+                    if (Attribute.Name == "Include" && Attribute.Value.EndsWith(".editorconfig"))
+                        IncludeEditorConfig = true;
+
+                    if (Attribute.Name == "Link" && Attribute.Value == ".editorconfig")
+                        LinkEditorConfig = true;
+                }
+
+                if (IncludeEditorConfig && LinkEditorConfig)
+                    IsEditorConfigLinked = true;
+            }
+        }
+
+        private void ParseProjectElementPackageReference(List<PackageReference> packageReferenceList, XElement projectElement)
+        {
+            XElement? PackageReferenceElement = projectElement.Element("PackageReference");
+            if (PackageReferenceElement != null)
+            {
+                string Name = string.Empty;
+                string Version = string.Empty;
+                string Condition = string.Empty;
+
+                foreach (XAttribute Attribute in PackageReferenceElement.Attributes())
+                {
+                    if (Attribute.Name == "Include")
+                        Name = Attribute.Value;
+
+                    if (Attribute.Name == "Version")
+                        Version = Attribute.Value;
+
+                    if (Attribute.Name == "Condition")
+                        Condition = Attribute.Value;
+                }
+
+                if (Name.Length > 0 && Version.Length > 0)
+                {
+                    PackageReference NewPackageReference = new(this, Name, Version, Condition);
+                    packageReferenceList.Add(NewPackageReference);
+                }
+            }
         }
 
         private string TargetFrameworks = string.Empty;

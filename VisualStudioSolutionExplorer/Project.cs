@@ -437,13 +437,13 @@
 
         private void ParseProjectElementOptions(XElement projectElement)
         {
-            XElement? LanguageVersionElement = projectElement.Element("LanguageVersion");
+            XElement? LanguageVersionElement = projectElement.Element("LangVersion");
             if (LanguageVersionElement != null)
                 LanguageVersion = LanguageVersionElement.Value;
 
             XElement? NullableElement = projectElement.Element("Nullable");
             if (NullableElement != null)
-                IsNullable = NullableElement.Value.ToUpper() == "TRUE";
+                IsNullable = NullableElement.Value.ToUpper() == "ENABLE";
 
             XElement? NeutralLanguageElement = projectElement.Element("NeutralLanguage");
             if (NeutralLanguageElement != null)

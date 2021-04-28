@@ -153,12 +153,12 @@
         /// <summary>
         /// Gets the dependencies.
         /// </summary>
-        public IReadOnlyCollection<string> Dependencies { get; init; }
+        public IReadOnlyList<string> Dependencies { get; init; }
 
         /// <summary>
         /// Gets the project references.
         /// </summary>
-        public IReadOnlyCollection<string> ProjectReferences { get; init; }
+        public IReadOnlyList<string> ProjectReferences { get; private set; }
 
         /// <summary>
         /// Gets the parent project GUID.
@@ -173,7 +173,7 @@
         /// <summary>
         /// Gets the project configurations.
         /// </summary>
-        public IReadOnlyCollection<Configuration> ProjectConfigurations { get; init; }
+        public IReadOnlyList<Configuration> ProjectConfigurations { get; init; }
 
         /// <summary>
         /// Gets the dependency level.
@@ -377,10 +377,12 @@
             FrameworkList = ParsedFrameworkList.AsReadOnly();
 
             List<PackageReference> ParsedPackageReferenceList = new();
+            List<string> ParsedProjectReferenceList = new();
             foreach (XElement ProjectElement in Root.Descendants("ItemGroup"))
-                ParseProjectItemGroup(ParsedPackageReferenceList, ProjectElement);
+                ParseProjectItemGroup(ParsedPackageReferenceList, ParsedProjectReferenceList, ProjectElement);
 
             PackageReferenceList = ParsedPackageReferenceList.AsReadOnly();
+            ProjectReferences = ParsedProjectReferenceList.AsReadOnly();
         }
 
         private void ParseProjectAttribute(XAttribute projectAttribute)
@@ -569,10 +571,11 @@
             return false;
         }
 
-        private void ParseProjectItemGroup(List<PackageReference> packageReferenceList, XElement projectElement)
+        private void ParseProjectItemGroup(List<PackageReference> packageReferenceList, List<string> projectReferenceList, XElement projectElement)
         {
             ParseProjectElementEditorConfigLink(projectElement);
             ParseProjectElementPackageReference(packageReferenceList, projectElement);
+            ParseProjectElementProjectReference(projectReferenceList, projectElement);
         }
 
         private void ParseProjectElementEditorConfigLink(XElement projectElement)
@@ -622,6 +625,27 @@
                 {
                     PackageReference NewPackageReference = new(this, Name, Version, Condition);
                     packageReferenceList.Add(NewPackageReference);
+                }
+            }
+        }
+
+        private void ParseProjectElementProjectReference(List<string> projectReferenceList, XElement projectElement)
+        {
+            XElement? ProjectReferenceElement = projectElement.Element("ProjectReference");
+            if (ProjectReferenceElement != null)
+            {
+                string Name = string.Empty;
+
+                foreach (XAttribute Attribute in ProjectReferenceElement.Attributes())
+                    if (Attribute.Name == "Include")
+                        Name = Attribute.Value;
+
+                if (Name.Length > 0)
+                {
+                    string ProjectFileName = Path.GetFileNameWithoutExtension(Name);
+
+                    if (!projectReferenceList.Contains(ProjectFileName))
+                        projectReferenceList.Add(ProjectFileName);
                 }
             }
         }

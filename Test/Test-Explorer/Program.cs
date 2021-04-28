@@ -10,18 +10,31 @@
         public static int Main(string[] args)
         {
             Debug.WriteLine($"Current directory: {Environment.CurrentDirectory}");
+
+            /*
             string RootPath = @"..\..\..\..\..\..\..\";
+            string SolutionName = "VisualStudioSolutionExplorer.sln";
+            */
 
-            Solution NewSolution = new Solution(Path.Combine(RootPath, "VisualStudioSolutionExplorer.sln"));
-            foreach (Project Project in NewSolution.ProjectList)
+            string[] Directories = Directory.GetDirectories(@"C:\Projects");
+            foreach (string Directory in Directories)
             {
-                if (Project.ProjectType == ProjectType.Unknown)
+                string RootPath = @$"{Directory}\";
+                string SolutionName = Path.GetFileName(Directory) + ".sln";
+                if (File.Exists($"{RootPath}{SolutionName}"))
                 {
-                    string ProjectPath = Path.Combine(RootPath, Project.RelativePath);
-                    Project.LoadDetails(ProjectPath);
-                }
+                    Solution NewSolution = new Solution(Path.Combine(RootPath, SolutionName));
+                    foreach (Project Project in NewSolution.ProjectList)
+                    {
+                        if (Project.ProjectType == ProjectType.Unknown)
+                        {
+                            string ProjectPath = Path.Combine(RootPath, Project.RelativePath);
+                            Project.LoadDetails(ProjectPath);
+                        }
 
-                Project.CheckVersionConsistency(out _);
+                        Project.CheckVersionConsistency(out _);
+                    }
+                }
             }
 
             return 0;

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Reflection;
     using Contracts;
@@ -9,6 +10,7 @@
     /// <summary>
     /// Reads and parses a solution file.
     /// </summary>
+    [DebuggerDisplay("{Name}")]
     public class Solution
     {
         #region Init

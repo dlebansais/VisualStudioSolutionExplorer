@@ -1,8 +1,11 @@
 ﻿namespace SlnExplorer
 {
+    using System.Diagnostics;
+
     /// <summary>
     /// Defines a framework supported by the project.
     /// </summary>
+    [DebuggerDisplay("{Name}")]
     public class Framework
     {
         /// <summary>

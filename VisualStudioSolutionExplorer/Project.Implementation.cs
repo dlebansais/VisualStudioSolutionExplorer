@@ -98,7 +98,23 @@
 
             XElement? NullableElement = projectElement.Element("Nullable");
             if (NullableElement != null)
-                IsNullable = NullableElement.Value.ToUpper() == "ENABLE";
+            {
+                switch (NullableElement.Value.ToUpper())
+                {
+                    case "ENABLE":
+                        IsNullable = NullableAnnotation.Enable;
+                        break;
+                    case "WARNINGS":
+                        IsNullable = NullableAnnotation.Warnings;
+                        break;
+                    case "ANNOTATIONS":
+                        IsNullable = NullableAnnotation.Annotations;
+                        break;
+                    case "DISABLE":
+                        IsNullable = NullableAnnotation.Disable;
+                        break;
+                }
+            }
 
             XElement? NeutralLanguageElement = projectElement.Element("NeutralLanguage");
             if (NeutralLanguageElement != null)

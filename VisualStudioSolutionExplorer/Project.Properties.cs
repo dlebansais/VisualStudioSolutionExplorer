@@ -163,9 +163,9 @@
         public string LanguageVersion { get; private set; } = string.Empty;
 
         /// <summary>
-        /// Gets a value indicating whether the project has nullable enabled.
+        /// Gets project nullable values setting.
         /// </summary>
-        public bool IsNullable { get; private set; }
+        public NullableAnnotation IsNullable { get; private set; }
 
         /// <summary>
         /// Gets the neutral langauge.

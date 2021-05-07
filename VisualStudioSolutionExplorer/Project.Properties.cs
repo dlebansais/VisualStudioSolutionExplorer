@@ -2,10 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Reflection;
-    using System.Xml.Linq;
 
     /// <summary>
     /// Reads and parses a project file.
@@ -165,7 +161,7 @@
         /// <summary>
         /// Gets project nullable values setting.
         /// </summary>
-        public NullableAnnotation IsNullable { get; private set; }
+        public NullableAnnotation Nullable { get; private set; }
 
         /// <summary>
         /// Gets the neutral langauge.

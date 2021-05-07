@@ -2,9 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.IO;
-    using System.Reflection;
     using System.Xml.Linq;
 
     /// <summary>
@@ -18,6 +16,9 @@
 
             foreach (XAttribute ProjectAttribute in Root.Attributes())
                 ParseProjectAttribute(ProjectAttribute);
+
+            foreach (XElement ProjectElement in Root.Descendants("Import"))
+                ParseProjectImport(ProjectElement);
 
             foreach (XElement ProjectElement in Root.Descendants("PropertyGroup"))
                 ParseProjectPropertyGroup(ProjectElement);
@@ -36,6 +37,12 @@
 
             PackageReferenceList = ParsedPackageReferenceList.AsReadOnly();
             ProjectReferences = ParsedProjectReferenceList.AsReadOnly();
+        }
+
+        private void ParseProjectImport(XElement projectElement)
+        {
+            foreach (XAttribute ElementAttribute in projectElement.Attributes())
+                ParseProjectAttribute(ElementAttribute);
         }
 
         private void ParseProjectAttribute(XAttribute projectAttribute)
@@ -102,16 +109,16 @@
                 switch (NullableElement.Value.ToUpper())
                 {
                     case "ENABLE":
-                        IsNullable = NullableAnnotation.Enable;
+                        Nullable = NullableAnnotation.Enable;
                         break;
                     case "WARNINGS":
-                        IsNullable = NullableAnnotation.Warnings;
+                        Nullable = NullableAnnotation.Warnings;
                         break;
                     case "ANNOTATIONS":
-                        IsNullable = NullableAnnotation.Annotations;
+                        Nullable = NullableAnnotation.Annotations;
                         break;
                     case "DISABLE":
-                        IsNullable = NullableAnnotation.Disable;
+                        Nullable = NullableAnnotation.Disable;
                         break;
                 }
             }

@@ -19,6 +19,9 @@
             string[] Directories = Directory.GetDirectories(@"C:\Projects");
             foreach (string Directory in Directories)
             {
+                //if (!Directory.EndsWith("ConsistencyAnalyzer"))
+                //    continue;
+
                 string RootPath = @$"{Directory}\";
                 string SolutionName = Path.GetFileName(Directory) + ".sln";
                 if (File.Exists($"{RootPath}{SolutionName}"))

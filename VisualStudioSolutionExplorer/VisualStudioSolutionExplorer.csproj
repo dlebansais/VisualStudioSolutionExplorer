@@ -11,12 +11,13 @@
     <Description>Explore .sln files</Description>
     <Copyright>Copyright © 2020 David Le Bansais</Copyright>
     <Version>1.2.5</Version>
-    <AssemblyVersion>1.2.5.17</AssemblyVersion>
+    <AssemblyVersion>1.2.5.19</AssemblyVersion>
     <FileVersion>1.2.5.17</FileVersion>
     <RepositoryUrl>https://github.com/dlebansais/VisualStudioSolutionExplorer</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <NeutralLanguage>en-US</NeutralLanguage>
     <RootNamespace>SlnExplorer</RootNamespace>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

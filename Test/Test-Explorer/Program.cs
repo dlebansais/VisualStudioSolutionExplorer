@@ -9,18 +9,18 @@
     {
         public static int Main(string[] args)
         {
-            Debug.WriteLine($"Current directory: {Environment.CurrentDirectory}");
+            if (args.Length < 1)
+                return -1;
 
-            /*
-            string RootPath = @"..\..\..\..\..\..\..\";
-            string SolutionName = "VisualStudioSolutionExplorer.sln";
-            */
+            string SolutionNameArg = args[0];
+
+            Debug.WriteLine($"Current directory: {Environment.CurrentDirectory}");
 
             string[] Directories = Directory.GetDirectories(@"C:\Projects");
             foreach (string Directory in Directories)
             {
-                //if (!Directory.EndsWith("ConsistencyAnalyzer"))
-                //    continue;
+                if (!Directory.EndsWith(SolutionNameArg))
+                    continue;
 
                 string RootPath = @$"{Directory}\";
                 string SolutionName = Path.GetFileName(Directory) + ".sln";

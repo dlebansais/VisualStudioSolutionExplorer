@@ -32,7 +32,9 @@
 
             List<PackageReference> ParsedPackageReferenceList = new();
             List<string> ParsedProjectReferenceList = new();
-            foreach (XElement ProjectElement in Root.Descendants("ItemGroup"))
+            IEnumerable<XElement> ItemGroups = Root.Descendants("ItemGroup");
+
+            foreach (XElement ProjectElement in ItemGroups)
                 ParseProjectItemGroup(ParsedPackageReferenceList, ParsedProjectReferenceList, ProjectElement);
 
             PackageReferenceList = ParsedPackageReferenceList.AsReadOnly();
@@ -278,8 +280,7 @@
 
         private void ParseProjectElementPackageReference(List<PackageReference> packageReferenceList, XElement projectElement)
         {
-            XElement? PackageReferenceElement = projectElement.Element("PackageReference");
-            if (PackageReferenceElement != null)
+            foreach (XElement PackageReferenceElement in projectElement.Descendants("PackageReference"))
             {
                 string Name = string.Empty;
                 string Version = string.Empty;
@@ -307,8 +308,7 @@
 
         private void ParseProjectElementProjectReference(List<string> projectReferenceList, XElement projectElement)
         {
-            XElement? ProjectReferenceElement = projectElement.Element("ProjectReference");
-            if (ProjectReferenceElement != null)
+            foreach (XElement ProjectReferenceElement in projectElement.Descendants("ProjectReference"))
             {
                 string Name = string.Empty;
 

@@ -166,6 +166,10 @@
             XElement? RepositoryUrlElement = projectElement.Element("RepositoryUrl");
             if (RepositoryUrlElement != null)
                 RepositoryUrl = new Uri(RepositoryUrlElement.Value);
+
+            XElement? ApplicationIconElement = projectElement.Element("ApplicationIcon");
+            if (ApplicationIconElement != null)
+                ApplicationIcon = ApplicationIconElement.Value;
         }
 
         private void ParseProjectElementFrameworks(XElement projectElement)

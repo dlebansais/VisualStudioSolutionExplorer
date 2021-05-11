@@ -139,6 +139,11 @@
         public Uri? RepositoryUrl { get; private set; }
 
         /// <summary>
+        /// Gets the project application icon.
+        /// </summary>
+        public string ApplicationIcon { get; private set; } = string.Empty;
+
+        /// <summary>
         /// Gets a value indicating whether the project has a repository URL.
         /// </summary>
         public bool HasRepositoryUrl => RepositoryUrl != null;

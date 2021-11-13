@@ -212,11 +212,13 @@
                     continue;
 
                 string MonikerName = MonikerValue.Value.ToString();
+
                 string MonikerPattern = $"-{MonikerName}";
-                if (FrameworkString.EndsWith(MonikerPattern, StringComparison.InvariantCulture))
+                int MonikerIndex = FrameworkString.IndexOf(MonikerPattern, StringComparison.InvariantCulture);
+                if (MonikerIndex > 0)
                 {
                     Moniker = MonikerValue.Value;
-                    FrameworkString = FrameworkString.Substring(0, FrameworkString.Length - MonikerPattern.Length);
+                    FrameworkString = FrameworkString.Substring(0, MonikerIndex);
                     break;
                 }
             }

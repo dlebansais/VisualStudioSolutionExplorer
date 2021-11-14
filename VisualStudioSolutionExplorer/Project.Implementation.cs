@@ -10,6 +10,10 @@
     /// </summary>
     public partial class Project
     {
+        private const string NetStandardPattern = "netstandard";
+        private const string NetCorePattern = "netcoreapp";
+        private const string NetFrameworkPattern = "net";
+
         private void ParseProjectElements(Stream stream)
         {
             XElement Root = XElement.Load(stream);
@@ -195,15 +199,40 @@
 
         private void ParseTargetFramework(List<Framework> parsedFrameworkList, string frameworkName)
         {
+            if (frameworkName.StartsWith(NetStandardPattern, StringComparison.InvariantCulture))
+                ParseTargetFrameworkNetStandard(parsedFrameworkList, frameworkName);
+            else if (frameworkName.StartsWith(NetCorePattern, StringComparison.InvariantCulture))
+                ParseTargetFrameworkNetCore(parsedFrameworkList, frameworkName);
+            else if (frameworkName.StartsWith(NetFrameworkPattern, StringComparison.InvariantCulture))
+                ParseTargetFrameworkNetFramework(parsedFrameworkList, frameworkName);
+        }
+
+        private void ParseTargetFrameworkNetStandard(List<Framework> parsedFrameworkList, string frameworkName)
+        {
+            string VersionString = frameworkName.Substring(NetStandardPattern.Length);
+
+            if (ParseNetVersion(VersionString, out int Major, out int Minor))
+            {
+                Framework NewFramework = new Framework(frameworkName, FrameworkType.NetStandard, Major, Minor);
+                parsedFrameworkList.Add(NewFramework);
+            }
+        }
+
+        private void ParseTargetFrameworkNetCore(List<Framework> parsedFrameworkList, string frameworkName)
+        {
+            string VersionString = frameworkName.Substring(NetCorePattern.Length);
+
+            if (ParseNetVersion(VersionString, out int Major, out int Minor))
+            {
+                Framework NewFramework = new Framework(frameworkName, FrameworkType.NetCore, Major, Minor);
+                parsedFrameworkList.Add(NewFramework);
+            }
+        }
+
+        private void ParseTargetFrameworkNetFramework(List<Framework> parsedFrameworkList, string frameworkName)
+        {
             string FrameworkString = frameworkName;
-
-            string NetStandardPattern = "netstandard";
-            string NetCorePattern = "netcoreapp";
-            string NetFrameworkPattern = "net";
-
-            Framework? NewFramework = null;
-            int Major;
-            int Minor;
+            string MonikerString = string.Empty;
             FrameworkMoniker Moniker = FrameworkMoniker.none;
 
             foreach (FrameworkMoniker? MonikerValue in typeof(FrameworkMoniker).GetEnumValues())
@@ -213,28 +242,64 @@
 
                 string MonikerName = MonikerValue.Value.ToString();
 
-                string MonikerPattern = $"-{MonikerName}";
-                int MonikerIndex = FrameworkString.IndexOf(MonikerPattern, StringComparison.InvariantCulture);
+                int MonikerIndex = FrameworkString.IndexOf($"-{MonikerName}", StringComparison.InvariantCulture);
                 if (MonikerIndex > 0)
                 {
                     Moniker = MonikerValue.Value;
+                    MonikerString = FrameworkString.Substring(MonikerIndex + 1);
                     FrameworkString = FrameworkString.Substring(0, MonikerIndex);
                     break;
                 }
             }
 
-            if (FrameworkString.StartsWith(NetStandardPattern, StringComparison.InvariantCulture) && ParseNetVersion(FrameworkString.Substring(NetStandardPattern.Length), out Major, out Minor))
-                NewFramework = new Framework(frameworkName, FrameworkType.NetStandard, Major, Minor, Moniker);
-            else if (FrameworkString.StartsWith(NetCorePattern, StringComparison.InvariantCulture) && ParseNetVersion(FrameworkString.Substring(NetCorePattern.Length), out Major, out Minor))
-                NewFramework = new Framework(frameworkName, FrameworkType.NetCore, Major, Minor, Moniker);
-            else if (FrameworkString.StartsWith(NetFrameworkPattern, StringComparison.InvariantCulture) && ParseNetVersion(FrameworkString.Substring(NetFrameworkPattern.Length), out Major, out Minor))
-                NewFramework = new Framework(frameworkName, FrameworkType.NetFramework, Major, Minor, Moniker);
+            string FrameworkVersionString = FrameworkString.Substring(NetFrameworkPattern.Length);
 
-            if (NewFramework != null)
-                parsedFrameworkList.Add(NewFramework);
+            if (ParseNetVersion(FrameworkVersionString, out int Major, out int Minor))
+            {
+                if (Moniker != FrameworkMoniker.none)
+                {
+                    string MonikerVersionString = MonikerString.Substring(Moniker.ToString().Length);
+                    if (ParseMonikerVersion(MonikerVersionString, out int MonikerMajor, out int MonikerMinor))
+                    {
+                        Framework NewFramework = new Framework(frameworkName, FrameworkType.NetFramework, Major, Minor, Moniker, MonikerMajor, MonikerMinor);
+                        parsedFrameworkList.Add(NewFramework);
+                    }
+                    else
+                    {
+                        Framework NewFramework = new Framework(frameworkName, FrameworkType.NetFramework, Major, Minor, Moniker);
+                        parsedFrameworkList.Add(NewFramework);
+                    }
+                }
+                else
+                {
+                    Framework NewFramework = new Framework(frameworkName, FrameworkType.NetFramework, Major, Minor);
+                    parsedFrameworkList.Add(NewFramework);
+                }
+            }
         }
 
         private static bool ParseNetVersion(string text, out int major, out int minor)
+        {
+            major = -1;
+            minor = -1;
+
+            string[] Versions = text.Split('.');
+            if (Versions.Length == 2)
+            {
+                if (int.TryParse(Versions[0], out major) && int.TryParse(Versions[1], out minor))
+                    return true;
+            }
+            else if (Versions.Length == 1)
+            {
+                string Version = Versions[0];
+                if (Version.Length > 1 && int.TryParse(Version.Substring(0, 1), out major) && int.TryParse(Version.Substring(1), out minor))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private static bool ParseMonikerVersion(string text, out int major, out int minor)
         {
             major = -1;
             minor = -1;

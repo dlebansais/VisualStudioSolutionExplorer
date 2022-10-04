@@ -14,7 +14,13 @@ public static class Program
 
         string SolutionNameArg = args[0];
 
-        Debug.WriteLine($"Current directory: {Environment.CurrentDirectory}");
+        Console.WriteLine($"Current directory: {Environment.CurrentDirectory}");
+#if NET48
+        Console.WriteLine($"Framework: net48");
+#elif NET6_0
+        Console.WriteLine($"Framework: net6.0");
+#endif
+        Console.WriteLine();
 
         string[] Directories = Directory.GetDirectories(@"C:\Projects");
         foreach (string Directory in Directories)

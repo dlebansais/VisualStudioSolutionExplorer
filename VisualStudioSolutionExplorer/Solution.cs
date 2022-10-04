@@ -94,7 +94,7 @@ public class Solution
 
     private void Initialize(string fileName)
     {
-        Microsoft.Build.Construction.SolutionFile SolutionFile = Microsoft.Build.Construction.SolutionFile.Parse(fileName);
+        SolutionFile SolutionFile = SolutionFile.Parse(fileName);
 
         foreach (ProjectInSolution Item in SolutionFile.ProjectsInOrder)
         {

@@ -1,59 +1,58 @@
-﻿namespace SlnExplorer
+﻿namespace SlnExplorer;
+
+using System.IO;
+
+/// <summary>
+/// Reads and parses a project file.
+/// </summary>
+public partial class Project
 {
-    using System.IO;
+    /// <summary>
+    /// Loads project details from a file.
+    /// </summary>
+    /// <param name="fileName">The path to the file.</param>
+    public void LoadDetails(string fileName)
+    {
+        using FileStream Stream = new(fileName, FileMode.Open, FileAccess.Read);
+        ParseProjectElements(Stream);
+    }
 
     /// <summary>
-    /// Reads and parses a project file.
+    /// Loads project details from a stream.
     /// </summary>
-    public partial class Project
+    /// <param name="stream">The stream.</param>
+    public void LoadDetails(Stream stream)
     {
-        /// <summary>
-        /// Loads project details from a file.
-        /// </summary>
-        /// <param name="fileName">The path to the file.</param>
-        public void LoadDetails(string fileName)
-        {
-            using FileStream Stream = new(fileName, FileMode.Open, FileAccess.Read);
-            ParseProjectElements(Stream);
-        }
+        ParseProjectElements(stream);
+    }
 
-        /// <summary>
-        /// Loads project details from a stream.
-        /// </summary>
-        /// <param name="stream">The stream.</param>
-        public void LoadDetails(Stream stream)
-        {
-            ParseProjectElements(stream);
-        }
+    /// <summary>
+    /// Checks a loaded for version consistency.
+    /// </summary>
+    /// <param name="warningOrErrorText">A warning or error text upon return.</param>
+    /// <returns>True upon return if an error was found; otherwise, false.</returns>
+    public bool CheckVersionConsistency(out string warningOrErrorText)
+    {
+        warningOrErrorText = string.Empty;
+        bool HasErrors = false;
 
-        /// <summary>
-        /// Checks a loaded for version consistency.
-        /// </summary>
-        /// <param name="warningOrErrorText">A warning or error text upon return.</param>
-        /// <returns>True upon return if an error was found; otherwise, false.</returns>
-        public bool CheckVersionConsistency(out string warningOrErrorText)
+        if (HasVersion)
         {
-            warningOrErrorText = string.Empty;
-            bool HasErrors = false;
-
-            if (HasVersion)
+            if (!IsVersionCompatible(AssemblyVersion, Version))
             {
-                if (!IsVersionCompatible(AssemblyVersion, Version))
-                {
-                    HasErrors = true;
-                    warningOrErrorText = $"{AssemblyVersion} not compatible with {Version}";
-                }
-
-                if (!IsVersionCompatible(FileVersion, Version))
-                {
-                    HasErrors = true;
-                    warningOrErrorText = $"{FileVersion} not compatible with {Version}";
-                }
+                HasErrors = true;
+                warningOrErrorText = $"{AssemblyVersion} not compatible with {Version}";
             }
-            else
-                warningOrErrorText = "Ignored because no version";
 
-            return HasErrors;
+            if (!IsVersionCompatible(FileVersion, Version))
+            {
+                HasErrors = true;
+                warningOrErrorText = $"{FileVersion} not compatible with {Version}";
+            }
         }
+        else
+            warningOrErrorText = "Ignored because no version";
+
+        return HasErrors;
     }
 }

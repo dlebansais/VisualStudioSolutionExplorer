@@ -1,23 +1,22 @@
-﻿namespace SlnExplorer
+﻿namespace SlnExplorer;
+
+/// <summary>
+/// SDK types.
+/// </summary>
+public enum SdkType
 {
     /// <summary>
-    /// SDK types.
+    /// Unknown sdk type.
     /// </summary>
-    public enum SdkType
-    {
-        /// <summary>
-        /// Unknown sdk type.
-        /// </summary>
-        Unknown,
+    Unknown,
 
-        /// <summary>
-        /// Generic SDK.
-        /// </summary>
-        Sdk,
+    /// <summary>
+    /// Generic SDK.
+    /// </summary>
+    Sdk,
 
-        /// <summary>
-        /// Windows Desktop Sdk.
-        /// </summary>
-        WindowsDesktop,
-    }
+    /// <summary>
+    /// Windows Desktop Sdk.
+    /// </summary>
+    WindowsDesktop,
 }

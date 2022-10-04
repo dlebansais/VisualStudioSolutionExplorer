@@ -92,7 +92,7 @@
             if (UseWindowsFormsElement != null)
                 UseWindowsForms = UseWindowsFormsElement.Value.ToUpper() == "TRUE";
 
-            if (ProjectType == ProjectType.Unknown)
+            if (ProjectType == ProjectType.Unknown || ProjectType == ProjectType.KnownToBeMSBuildFormat)
             {
                 if (OutputType.Length == 0 || OutputType == "Library")
                     ProjectType = ProjectType.Library;

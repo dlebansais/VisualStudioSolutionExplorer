@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-#if NET48
+#if NET481
 using Contracts;
 #else
 using System.Reflection.PortableExecutable;
@@ -20,20 +20,11 @@ using Microsoft.Build.Construction;
 public class Solution
 {
     #region Init
-#if NET48
-    static Solution()
-    {
-        SolutionParserType = ReflectionTools.GetProjectInSolutionType("SolutionParser");
-
-        SolutionParserReader = ReflectionTools.GetTypeProperty(SolutionParserType, "SolutionReader");
-        SolutionParserProjects = ReflectionTools.GetTypeProperty(SolutionParserType, "Projects");
-        SolutionParserParseSolution = ReflectionTools.GetTypeMethod(SolutionParserType, "ParseSolution");
-    }
-
-    private static readonly Type SolutionParserType;
-    private static readonly PropertyInfo SolutionParserReader;
-    private static readonly PropertyInfo SolutionParserProjects;
-    private static readonly MethodInfo SolutionParserParseSolution;
+#if NET481
+    private static readonly Type SolutionParserType = ReflectionTools.GetProjectInSolutionType("SolutionParser");
+    private static readonly PropertyInfo SolutionParserReader = ReflectionTools.GetTypeProperty(SolutionParserType, "SolutionReader");
+    private static readonly PropertyInfo SolutionParserProjects = ReflectionTools.GetTypeProperty(SolutionParserType, "Projects");
+    private static readonly MethodInfo SolutionParserParseSolution = ReflectionTools.GetTypeMethod(SolutionParserType, "ParseSolution");
 #endif
 
     /// <summary>
@@ -53,7 +44,7 @@ public class Solution
     /// </summary>
     /// <param name="name">The solution name.</param>
     /// <param name="reader">A stream with the solution content.</param>
-#if NET48
+#if NET481
     public Solution(string name, StreamReader reader)
     {
         SolutionFileName = string.Empty;
@@ -64,7 +55,7 @@ public class Solution
 
     private void Initialize(string fileName)
     {
-        using StreamReader Reader = new StreamReader(fileName);
+        using StreamReader Reader = new(fileName);
         Initialize(Reader);
     }
 
@@ -74,13 +65,13 @@ public class Solution
         var SolutionParser = Constructor.Invoke(null);
 
         SolutionParserReader.SetValue(SolutionParser, reader, null);
-        SolutionParserParseSolution.Invoke(SolutionParser, null);
+        _ = SolutionParserParseSolution.Invoke(SolutionParser, null);
 
         Array ProjetctArray = (Array)ReflectionTools.GetPropertyValue(SolutionParserProjects, SolutionParser);
         for (int i = 0; i < ProjetctArray.Length; i++)
         {
             Contract.RequireNotNull(ProjetctArray.GetValue(i), out object SolutionProject);
-            Project NewProject = new Project(this, SolutionProject);
+            Project NewProject = new(this, SolutionProject);
 
             ProjectList.Add(NewProject);
         }
@@ -98,7 +89,7 @@ public class Solution
 
         foreach (ProjectInSolution Item in SolutionFile.ProjectsInOrder)
         {
-            Project NewProject = new Project(this, Item);
+            Project NewProject = new(this, Item);
             ProjectList.Add(NewProject);
         }
     }

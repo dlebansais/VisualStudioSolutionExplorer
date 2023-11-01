@@ -3,7 +3,7 @@
 using System;
 using System.Diagnostics;
 using System.Reflection;
-#if !NET48
+#if !NET481
 using Microsoft.Build.Construction;
 #endif
 
@@ -14,16 +14,9 @@ using Microsoft.Build.Construction;
 public class Configuration
 {
     #region Init
-#if NET48
-    static Configuration()
-    {
-        ProjectConfigurationInSolutionType = ReflectionTools.GetProjectInSolutionType("ProjectConfigurationInSolution");
-
-        ProjectConfigurationInSolutionIncludeInBuild = ReflectionTools.GetTypeProperty(ProjectConfigurationInSolutionType, nameof(IncludeInBuild));
-    }
-
-    private static readonly Type ProjectConfigurationInSolutionType;
-    private static readonly PropertyInfo ProjectConfigurationInSolutionIncludeInBuild;
+#if NET481
+    private static readonly Type ProjectConfigurationInSolutionType = ReflectionTools.GetProjectInSolutionType("ProjectConfigurationInSolution");
+    private static readonly PropertyInfo ProjectConfigurationInSolutionIncludeInBuild = ReflectionTools.GetTypeProperty(ProjectConfigurationInSolutionType, nameof(IncludeInBuild));
 #endif
 
     /// <summary>
@@ -39,7 +32,7 @@ public class Configuration
         ConfigurationName = configurationName;
         PlatformName = platformName;
 
-#if NET48
+#if NET481
         IncludeInBuild = (bool)ReflectionTools.GetPropertyValue(ProjectConfigurationInSolutionIncludeInBuild, solutionConfiguration);
 #else
         ProjectConfigurationInSolution Configuration = (ProjectConfigurationInSolution)solutionConfiguration;

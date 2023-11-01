@@ -38,13 +38,13 @@ public partial class Project
 
         if (HasVersion)
         {
-            if (!IsVersionCompatible(AssemblyVersion, Version))
+            if (!Project.IsVersionCompatible(AssemblyVersion, Version))
             {
                 HasErrors = true;
                 warningOrErrorText = $"{AssemblyVersion} not compatible with {Version}";
             }
 
-            if (!IsVersionCompatible(FileVersion, Version))
+            if (!Project.IsVersionCompatible(FileVersion, Version))
             {
                 HasErrors = true;
                 warningOrErrorText = $"{FileVersion} not compatible with {Version}";

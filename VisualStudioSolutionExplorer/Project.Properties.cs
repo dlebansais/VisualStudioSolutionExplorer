@@ -146,7 +146,7 @@ public partial class Project
     /// <summary>
     /// Gets a value indicating whether the project has a repository URL.
     /// </summary>
-    public bool HasRepositoryUrl => RepositoryUrl != null;
+    public bool HasRepositoryUrl => RepositoryUrl is not null;
 
     /// <summary>
     /// Gets the list of parsed project frameworks.

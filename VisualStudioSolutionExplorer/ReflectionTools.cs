@@ -1,4 +1,4 @@
-﻿#if NET48
+﻿#if NET481
 namespace SlnExplorer;
 
 using System;

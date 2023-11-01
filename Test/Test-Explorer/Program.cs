@@ -15,7 +15,7 @@ public static class Program
         string SolutionNameArg = args[0];
 
         Console.WriteLine($"Current directory: {Environment.CurrentDirectory}");
-#if NET48
+#if NET481
         Console.WriteLine($"Framework: net48");
 #elif NET6_0
         Console.WriteLine($"Framework: net6.0");

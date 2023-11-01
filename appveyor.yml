@@ -36,7 +36,7 @@ build:
   project: $(APPVEYOR_PROJECT_NAME).sln
 
 after_build:
-  - nuget install Packager -Version 1.1.11 -OutputDirectory packages # Install Packager
+  - nuget install Packager -DependencyVersion Highest -OutputDirectory packages # Install Packager
   - ps: $folder = Get-ChildItem -Path packages/Packager.* -Name | Out-String    # Get the installation folder (we don't know the actual version)
   - ps: $firstline = ($folder -split '\r\n')[0]                                 # Get rid of carriage-return
   - ps: $fullpath = ".\packages\$firstline\lib\net48\Packager.exe"              # Build full path

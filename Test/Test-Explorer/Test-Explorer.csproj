@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net481;net6.0-windows7.0</TargetFrameworks>
+    <TargetFrameworks>net481;net7.0-windows7.0</TargetFrameworks>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <UseWPF>true</UseWPF>
     <LangVersion>10.0</LangVersion>

@@ -179,6 +179,16 @@ public partial class Project
     public bool IsTreatWarningsAsErrors { get; private set; }
 
     /// <summary>
+    /// Gets a value indicating whether the project is a test project.
+    /// </summary>
+    public bool IsTestProject { get; private set; }
+
+    /// <summary>
+    /// Gets a value indicating whether the project is not packable.
+    /// </summary>
+    public bool IsNotPackable { get; private set; }
+
+    /// <summary>
     /// Gets a value indicating whether the project links to the solution's editor config.
     /// </summary>
     public bool IsEditorConfigLinked { get; private set; }

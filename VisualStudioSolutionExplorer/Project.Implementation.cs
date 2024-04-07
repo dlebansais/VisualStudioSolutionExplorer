@@ -87,11 +87,11 @@ public partial class Project
 
         XElement? UseWPFElement = projectElement.Element("UseWPF");
         if (UseWPFElement is not null)
-            UseWpf = UseWPFElement.Value.ToUpper(CultureInfo.InvariantCulture) == "TRUE";
+            UseWpf = string.Equals(UseWPFElement.Value, "true", StringComparison.OrdinalIgnoreCase);
 
         XElement? UseWindowsFormsElement = projectElement.Element("UseWindowsForms");
         if (UseWindowsFormsElement is not null)
-            UseWindowsForms = UseWindowsFormsElement.Value.ToUpper(CultureInfo.InvariantCulture) == "TRUE";
+            UseWindowsForms = string.Equals(UseWindowsFormsElement.Value, "true", StringComparison.OrdinalIgnoreCase);
 
         if (ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
         {
@@ -136,7 +136,15 @@ public partial class Project
 
         XElement? TreatWarningsAsErrorsElement = projectElement.Element("TreatWarningsAsErrors");
         if (TreatWarningsAsErrorsElement is not null)
-            IsTreatWarningsAsErrors = TreatWarningsAsErrorsElement.Value.ToUpper(CultureInfo.InvariantCulture) == "TRUE";
+            IsTreatWarningsAsErrors = string.Equals(TreatWarningsAsErrorsElement.Value, "true", StringComparison.OrdinalIgnoreCase);
+
+        XElement? IsTestProjectElement = projectElement.Element("IsTestProject");
+        if (IsTestProjectElement is not null)
+            IsTestProject = string.Equals(IsTestProjectElement.Value, "true", StringComparison.OrdinalIgnoreCase);
+
+        XElement? IsPackableElement = projectElement.Element("IsPackable");
+        if (IsPackableElement is not null)
+            IsNotPackable = string.Equals(IsPackableElement.Value, "false", StringComparison.OrdinalIgnoreCase);
     }
 
     private void ParseProjectElementVersion(XElement projectElement)

@@ -1,7 +1,6 @@
 ﻿namespace TestEaslyNumber;
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using SlnExplorer;
 
@@ -16,9 +15,9 @@ public static class Program
 
         Console.WriteLine($"Current directory: {Environment.CurrentDirectory}");
 #if NET481
-        Console.WriteLine($"Framework: net48");
-#elif NET7_0
-        Console.WriteLine($"Framework: net7.0");
+        Console.WriteLine($"Framework: net481");
+#elif NET8_0
+        Console.WriteLine($"Framework: net8.0");
 #endif
         Console.WriteLine();
 
@@ -32,12 +31,12 @@ public static class Program
             string SolutionName = Path.GetFileName(Directory) + ".sln";
             if (File.Exists($"{RootPath}{SolutionName}"))
             {
-                Solution NewSolution = new Solution(Path.Combine(RootPath, SolutionName));
+                Solution NewSolution = new(Path.Combine(RootPath, SolutionName));
                 DisplaySolutionProperties(NewSolution);
 
                 foreach (Project Project in NewSolution.ProjectList)
                 {
-                    if (Project.ProjectType == ProjectType.Unknown || Project.ProjectType == ProjectType.KnownToBeMSBuildFormat)
+                    if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
                     {
                         string ProjectPath = Path.Combine(RootPath, Project.RelativePath);
                         Project.LoadDetails(ProjectPath);
@@ -121,6 +120,8 @@ public static class Program
         Console.WriteLine($"    Nullable:         {project.Nullable}");
         Console.WriteLine($"    Neutral Language: '{project.NeutralLanguage}'");
         Console.WriteLine($"    Warning as error: {(project.IsTreatWarningsAsErrors ? "Yes" : "No")}");
+        Console.WriteLine($"    Test project:     {(project.IsTestProject ? "Yes" : "No")}");
+        Console.WriteLine($"    Packable:         {(project.IsNotPackable ? "No" : "Yes")}");
         Console.WriteLine($"    Editor Config:    {(project.IsEditorConfigLinked ? "Linked" : "Not Linked")}");
         Console.WriteLine($"    Packages:         {project.PackageReferenceList.Count}");
 

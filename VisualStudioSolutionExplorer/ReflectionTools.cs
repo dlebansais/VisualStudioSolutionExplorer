@@ -19,7 +19,7 @@ internal static class ReflectionTools
     public static Type GetProjectInSolutionType(string typeName)
     {
         string FullTypeName = $"Microsoft.Build.Construction.{typeName}, Microsoft.Build, Version = 4.0.0.0, Culture = neutral, PublicKeyToken = b03f5f7f11d50a3a";
-        Contract.RequireNotNull(Type.GetType(FullTypeName, false, false), out Type Result);
+        Type Result = Contract.AssertNotNull(Type.GetType(FullTypeName, false, false));
         return Result;
     }
 
@@ -32,7 +32,7 @@ internal static class ReflectionTools
     public static PropertyInfo GetTypeProperty(Type type, string propertyName)
     {
         PropertyInfo? Property = type.GetProperty(propertyName, BindingFlags.NonPublic | BindingFlags.Instance);
-        Contract.RequireNotNull(Property, out PropertyInfo Result);
+        PropertyInfo Result = Contract.AssertNotNull(Property);
 
         return Result;
     }
@@ -46,7 +46,7 @@ internal static class ReflectionTools
     public static MethodInfo GetTypeMethod(Type type, string methodName)
     {
         MethodInfo? Method = type.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
-        Contract.RequireNotNull(Method, out MethodInfo Result);
+        MethodInfo Result = Contract.AssertNotNull(Method);
 
         return Result;
     }
@@ -73,7 +73,7 @@ internal static class ReflectionTools
     public static object GetPropertyValue(PropertyInfo property, object obj)
     {
         object? Value = property.GetValue(obj);
-        Contract.RequireNotNull(Value, out object Result);
+        object Result = Contract.AssertNotNull(Value);
 
         return Result;
     }

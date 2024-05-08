@@ -70,7 +70,7 @@ public class Solution
         Array ProjetctArray = (Array)ReflectionTools.GetPropertyValue(SolutionParserProjects, SolutionParser);
         for (int i = 0; i < ProjetctArray.Length; i++)
         {
-            Contract.RequireNotNull(ProjetctArray.GetValue(i), out object SolutionProject);
+            object SolutionProject = Contract.AssertNotNull(ProjetctArray.GetValue(i));
             Project NewProject = new(this, SolutionProject);
 
             ProjectList.Add(NewProject);

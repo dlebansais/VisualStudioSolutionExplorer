@@ -1,6 +1,7 @@
 ﻿namespace TestEaslyNumber;
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using SlnExplorer;
 
@@ -68,26 +69,13 @@ public static class Program
         Console.WriteLine($"    Guid:             {project.ProjectGuid}");
         Console.WriteLine($"    Type:             {project.ProjectType}");
         Console.WriteLine($"    Extension:        '{project.Extension}'");
-        Console.WriteLine($"    Dependencies:     {project.Dependencies.Count}");
 
-        foreach (string Dependency in project.Dependencies)
-            Console.WriteLine($"                      {Dependency}");
-
-        Console.WriteLine($"    References:       {project.ProjectReferences.Count}");
-
-        foreach (string Reference in project.ProjectReferences)
-            Console.WriteLine($"                      {Reference}");
+        DisplayProjectPropertiesDependencies(project.Dependencies);
+        DisplayProjectPropertiesReferences(project.ProjectReferences);
 
         Console.WriteLine($"    Parent Guid:      '{project.ParentProjectGuid}'");
-        Console.WriteLine($"    Configurations:   {project.ProjectConfigurations.Count}");
 
-        foreach (Configuration Configuration in project.ProjectConfigurations)
-        {
-            Console.WriteLine($"                      {Configuration.Project.ProjectName}");
-            Console.WriteLine($"                        {Configuration.ConfigurationName}");
-            Console.WriteLine($"                        {Configuration.PlatformName}");
-            Console.WriteLine($"                        {(Configuration.IncludeInBuild ? "Included" : "Not Included")}");
-        }
+        DisplayProjectPropertiesConfigurations(project.ProjectConfigurations);
 
         Console.WriteLine($"    Dep. Level:       {project.DependencyLevel}");
         Console.WriteLine($"    Static Library:   {(project.IsStaticLibrary ? "Yes" : "No")}");
@@ -107,14 +95,8 @@ public static class Program
         Console.WriteLine($"    Copyright:        {project.Copyright}");
         Console.WriteLine($"    Repository Url:   {(project.RepositoryUrl is null ? "None" : project.RepositoryUrl)}");
         Console.WriteLine($"    Icon:             {project.ApplicationIcon}");
-        Console.WriteLine($"    Frameworks:       {project.FrameworkList.Count}");
 
-        foreach (Framework Framework in project.FrameworkList)
-        {
-            Console.WriteLine($"                        {Framework.Name}");
-            Console.WriteLine($"                        {Framework.Type}");
-            Console.WriteLine($"                        {Framework.Major}.{Framework.Minor}-{Framework.Moniker}{Framework.MonikerMajor}.{Framework.MonikerMinor}");
-        }
+        DisplayProjectPropertiesFrameworkList(project.FrameworkList);
 
         Console.WriteLine($"    Language:         {project.LanguageVersion}");
         Console.WriteLine($"    Nullable:         {project.Nullable}");
@@ -123,9 +105,56 @@ public static class Program
         Console.WriteLine($"    Test project:     {(project.IsTestProject ? "Yes" : "No")}");
         Console.WriteLine($"    Packable:         {(project.IsNotPackable ? "No" : "Yes")}");
         Console.WriteLine($"    Editor Config:    {(project.IsEditorConfigLinked ? "Linked" : "Not Linked")}");
-        Console.WriteLine($"    Packages:         {project.PackageReferenceList.Count}");
 
-        foreach (PackageReference Package in project.PackageReferenceList)
+        DisplayProjectPropertiesPackageReferenceList(project.PackageReferenceList);
+    }
+
+    private static void DisplayProjectPropertiesDependencies(IReadOnlyList<string> dependencies)
+    {
+        Console.WriteLine($"    Dependencies:     {dependencies.Count}");
+
+        foreach (string Dependency in dependencies)
+            Console.WriteLine($"                      {Dependency}");
+    }
+
+    private static void DisplayProjectPropertiesReferences(IReadOnlyList<string> projectReferences)
+    {
+        Console.WriteLine($"    References:       {projectReferences.Count}");
+
+        foreach (string Reference in projectReferences)
+            Console.WriteLine($"                      {Reference}");
+    }
+
+    private static void DisplayProjectPropertiesConfigurations(IReadOnlyList<Configuration> configurations)
+    {
+        Console.WriteLine($"    Configurations:   {configurations.Count}");
+
+        foreach (Configuration Configuration in configurations)
+        {
+            Console.WriteLine($"                      {Configuration.Project.ProjectName}");
+            Console.WriteLine($"                        {Configuration.ConfigurationName}");
+            Console.WriteLine($"                        {Configuration.PlatformName}");
+            Console.WriteLine($"                        {(Configuration.IncludeInBuild ? "Included" : "Not Included")}");
+        }
+    }
+
+    private static void DisplayProjectPropertiesFrameworkList(IReadOnlyList<Framework> frameworkList)
+    {
+        Console.WriteLine($"    Frameworks:       {frameworkList.Count}");
+
+        foreach (Framework Framework in frameworkList)
+        {
+            Console.WriteLine($"                        {Framework.Name}");
+            Console.WriteLine($"                        {Framework.Type}");
+            Console.WriteLine($"                        {Framework.Major}.{Framework.Minor}-{Framework.Moniker}{Framework.MonikerMajor}.{Framework.MonikerMinor}");
+        }
+    }
+
+    private static void DisplayProjectPropertiesPackageReferenceList(IReadOnlyList<PackageReference> packageReferenceList)
+    {
+        Console.WriteLine($"    Packages:         {packageReferenceList.Count}");
+
+        foreach (PackageReference Package in packageReferenceList)
         {
             Console.WriteLine($"                        {Package.Project.ProjectName}");
             Console.WriteLine($"                          {Package.Name}");

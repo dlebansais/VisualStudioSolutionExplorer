@@ -623,11 +623,65 @@ public class TestVisualStudioSolutionExplorer
     }
 
     [Test]
-    public void TestInvalidNetFrameworkVersion()
+    public void TestInvalidNetFrameworkVersion1()
     {
         string RootPath = Path.Combine(TestTools.GetExecutingProjectRootPath(), TestSolutionsFolder);
         const string TestSolution = "Method.Contracts";
-        const string InvalidSolutionFolder = "Invalid-009";
+        const string InvalidSolutionFolder = "Invalid-009-1";
+
+        Solution NewSolution = new(Path.Combine(RootPath, InvalidSolutionFolder, $"{TestSolution}.sln"));
+
+        Assert.That(NewSolution.Name, Is.EqualTo(TestSolution));
+
+        foreach (Project Project in NewSolution.ProjectList)
+        {
+            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            {
+                string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
+                using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
+                Project.LoadDetails(Stream);
+
+                if (Project.ProjectName == TestSolution)
+                {
+                    Assert.That(Project.FrameworkList, Is.Empty);
+                }
+            }
+        }
+    }
+
+    [Test]
+    public void TestInvalidNetFrameworkVersion2()
+    {
+        string RootPath = Path.Combine(TestTools.GetExecutingProjectRootPath(), TestSolutionsFolder);
+        const string TestSolution = "Method.Contracts";
+        const string InvalidSolutionFolder = "Invalid-009-2";
+
+        Solution NewSolution = new(Path.Combine(RootPath, InvalidSolutionFolder, $"{TestSolution}.sln"));
+
+        Assert.That(NewSolution.Name, Is.EqualTo(TestSolution));
+
+        foreach (Project Project in NewSolution.ProjectList)
+        {
+            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            {
+                string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
+                using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
+                Project.LoadDetails(Stream);
+
+                if (Project.ProjectName == TestSolution)
+                {
+                    Assert.That(Project.FrameworkList, Is.Empty);
+                }
+            }
+        }
+    }
+
+    [Test]
+    public void TestInvalidNetFrameworkVersion3()
+    {
+        string RootPath = Path.Combine(TestTools.GetExecutingProjectRootPath(), TestSolutionsFolder);
+        const string TestSolution = "Method.Contracts";
+        const string InvalidSolutionFolder = "Invalid-009-3";
 
         Solution NewSolution = new(Path.Combine(RootPath, InvalidSolutionFolder, $"{TestSolution}.sln"));
 

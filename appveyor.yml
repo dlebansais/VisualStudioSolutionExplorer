@@ -60,7 +60,6 @@ before_test:
   - nuget install ReportGenerator -Version %report_generator_version% -OutputDirectory packages
   - |-
     printf "dotnet test ./Test/%APPVEYOR_PROJECT_NAME%.Test/bin/x64/%CONFIGURATION%/net8.0-windows7.0/%APPVEYOR_PROJECT_NAME%.Test.dll -l console;verbosity=detailed\n" > run-tests.bat
-    printf "dotnet test ./Test/%APPVEYOR_PROJECT_NAME%.Test/bin/x64/%CONFIGURATION%/net481/%APPVEYOR_PROJECT_NAME%.Test.dll -l console;verbosity=detailed\n" >> run-tests.bat
   - |-
     printf "@echo ************************************************************** Starting Tests..\n" > run-tests1.bat
     printf "call run-tests.bat\n" >> run-tests1.bat

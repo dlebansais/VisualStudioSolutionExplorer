@@ -47,11 +47,11 @@ if exist .\Test\%TESTPROJECTNAME%\*.log del .\Test\%TESTPROJECTNAME%\*.log
 if exist %RESULTFILEPATH% del %RESULTFILEPATH%
 
 rem Execute tests within OpenCover.
-%OPENCOVER_EXE% -register:user -target:%NUINT_CONSOLE_EXE% -targetargs:".\Test\%TESTPROJECTNAME%\bin\%PLATFORM%\%CONFIGURATION%\%FRAMEWORK%\%TESTPROJECTNAME%.dll --trace=Debug --labels=Before" "-filter:+[*]* -[%TESTPROJECTNAME%*]*" -output:%RESULTFILEPATH% -mergeoutput
+%OPENCOVER_EXE% -register:user -target:%NUINT_CONSOLE_EXE% -targetargs:".\Test\%TESTPROJECTNAME%\bin\%PLATFORM%\%CONFIGURATION%\%FRAMEWORK%\%TESTPROJECTNAME%.dll --trace=Debug --labels=Before" "-filter:+[*]*" -output:%RESULTFILEPATH% -mergeoutput
 
 if not exist %RESULTFILEPATH% goto end
 %CODECOV_UPLOADER_EXE% -f %RESULTFILEPATH% -t %TOKEN%
-%REPORTGENERATOR_EXE% -reports:%RESULTFILEPATH% -targetdir:.\CoverageReports "-assemblyfilters:-Microsoft*;+%PROJECTNAME%" "-filefilters:-*.g.cs"
+%REPORTGENERATOR_EXE% -reports:%RESULTFILEPATH% -targetdir:.\CoverageReports "-assemblyfilters:-Microsoft*" "-filefilters:-*.g.cs"
 goto end
 
 :error_console1

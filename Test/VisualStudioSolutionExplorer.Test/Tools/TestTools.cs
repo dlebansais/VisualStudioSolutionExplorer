@@ -1,22 +1,21 @@
 ﻿namespace VisualStudioSolutionExplorer.Test;
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
+using System.Reflection;
 
 public static class TestTools
 {
     public static string GetExecutingProjectRootPath()
     {
-        string? CurrentDirectory = Environment.CurrentDirectory;
+        Assembly ExecutingAssembly = Assembly.GetExecutingAssembly();
+        string? CurrentDirectory = Path.GetDirectoryName(ExecutingAssembly.Location);
         bool Continue = true;
 
         while (Continue)
         {
-            string? ParentFolder = System.IO.Path.GetDirectoryName(CurrentDirectory);
-            string? FileName = System.IO.Path.GetFileName(CurrentDirectory);
+            string? ParentFolder = Path.GetDirectoryName(CurrentDirectory);
+            string? FileName = Path.GetFileName(CurrentDirectory);
 
             switch (FileName)
             {

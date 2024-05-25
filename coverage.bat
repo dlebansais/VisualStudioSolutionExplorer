@@ -75,3 +75,5 @@ echo ERROR: %TESTPROJECTNAME%.dll not built.
 goto end
 
 :end
+if exist *.log del *.log
+if exist TestResult.xml del TestResult.xml

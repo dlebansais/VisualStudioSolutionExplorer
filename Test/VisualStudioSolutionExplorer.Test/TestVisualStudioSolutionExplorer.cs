@@ -417,10 +417,11 @@ public class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            bool IsUnknownFormat = Project.ProjectType == ProjectType.Unknown;
-            bool IsMSBuildFormat = Project.ProjectType == ProjectType.KnownToBeMSBuildFormat;
+            bool IsFormatWithDetail = false;
+            IsFormatWithDetail |= Project.ProjectType == ProjectType.Unknown;
+            IsFormatWithDetail |= Project.ProjectType == ProjectType.KnownToBeMSBuildFormat;
 
-            if (IsUnknownFormat || IsMSBuildFormat)
+            if (IsFormatWithDetail)
             {
                 string ProjectPath = Path.Combine(RootPath, TestSolution, Project.RelativePath);
                 Project.LoadDetails(ProjectPath);

@@ -1,5 +1,6 @@
 ﻿namespace VisualStudioSolutionExplorer.Test;
 
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -10,30 +11,29 @@ public static class TestTools
     {
         Assembly ExecutingAssembly = Assembly.GetExecutingAssembly();
         string? CurrentDirectory = Path.GetDirectoryName(ExecutingAssembly.Location);
-        bool Continue = true;
 
-        while (Continue)
+        for (;;)
         {
             string? ParentFolder = Path.GetDirectoryName(CurrentDirectory);
             string FileName = Path.GetFileName(CurrentDirectory)!;
 
-            switch (FileName)
+            List<string> KnownFolderNames = new()
             {
-                case "net481":
-                case "net7.0":
-                case "net7.0-windows7.0":
-                case "net8.0":
-                case "net8.0-windows7.0":
-                case "Debug":
-                case "Release":
-                case "x64":
-                case "bin":
-                    CurrentDirectory = ParentFolder;
-                    continue;
-                default:
-                    Continue = false;
-                    break;
-            }
+                "net481",
+                "net7.0",
+                "net7.0-windows7.0",
+                "net8.0",
+                "net8.0-windows7.0",
+                "Debug",
+                "Release",
+                "x64",
+                "bin",
+            };
+
+            if (KnownFolderNames.Contains(FileName))
+                CurrentDirectory = ParentFolder;
+            else
+                break;
         }
 
         Debug.Assert(CurrentDirectory is not null);

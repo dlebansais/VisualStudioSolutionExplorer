@@ -417,15 +417,8 @@ public class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            bool IsFormatWithDetail = false;
-            IsFormatWithDetail |= Project.ProjectType == ProjectType.Unknown;
-            IsFormatWithDetail |= Project.ProjectType == ProjectType.KnownToBeMSBuildFormat;
-
-            if (IsFormatWithDetail)
-            {
-                string ProjectPath = Path.Combine(RootPath, TestSolution, Project.RelativePath);
-                Project.LoadDetails(ProjectPath);
-            }
+            string ProjectPath = Path.Combine(RootPath, TestSolution, Project.RelativePath);
+            Project.LoadDetails(ProjectPath);
 
             bool HasError = Project.CheckVersionConsistency(out _);
 

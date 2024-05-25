@@ -1,5 +1,6 @@
 ﻿namespace VisualStudioSolutionExplorer.Test;
 
+using System;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -35,6 +36,12 @@ public class TestVisualStudioSolutionExplorer
 
             if (Project.ProjectName == TestSolution)
             {
+                Assert.That(Project.ParentSolution, Is.EqualTo(NewSolution));
+                Assert.That(Project.IsAssemblyVersionValid, Is.True);
+                Assert.That(Project.IsFileVersionValid, Is.True);
+                Assert.That(Project.HasRepositoryUrl, Is.True);
+                Assert.That(Project.HasTargetFrameworks, Is.True);
+
                 Assert.That(Project.ProjectConfigurations.Count , Is.EqualTo(2));
 
                 Configuration FirstConfiguration = Project.ProjectConfigurations[0];
@@ -109,6 +116,21 @@ public class TestVisualStudioSolutionExplorer
                 Assert.That(FirstPackageReference.Condition, Is.Empty);
             }
         }
+    }
+#else
+    [Test]
+    public void TestfromReader()
+    {
+        string RootPath = Path.Combine(TestTools.GetExecutingProjectRootPath(), TestSolutionsFolder);
+        const string TestSolution = "Method.Contracts";
+
+        string SolutionPath = Path.Combine(RootPath, TestSolution, $"{TestSolution}.sln");
+        using FileStream Stream = new(SolutionPath, FileMode.Open, FileAccess.Read);
+        using StreamReader Reader = new(Stream);
+
+#pragma warning disable CS0618
+        _ = Assert.Throws<NotImplementedException>(() => _ = new Solution(TestSolution, Reader));
+#pragma warning restore CS0618
     }
 #endif
 

@@ -120,10 +120,9 @@ public partial class Project
         Dependencies = DependencyList.AsReadOnly();
         ProjectReferences = ProjectReferenceList.AsReadOnly();
 
-        if (ProjectInSolution.ParentProjectGuid is not null)
-            ParentProjectGuid = ProjectInSolution.ParentProjectGuid;
-        else
-            ParentProjectGuid = string.Empty;
+        // If ProjectInSolution.ParentProjectGuid is null, ParentProjectGuid is set to string.Empty.
+        object ParentProjectGuidValue = ProjectInSolution.ParentProjectGuid;
+        ParentProjectGuid = Convert.ToString(ParentProjectGuidValue, CultureInfo.InvariantCulture)!;
 #endif
     }
 
@@ -153,15 +152,15 @@ public partial class Project
         List<Configuration> ConfigurationList = new();
         foreach (string Key in ProjectConfigurationsValue.Keys)
         {
-            object? Value = ProjectConfigurationsValue[Key];
+            object Value = ProjectConfigurationsValue[Key];
 
-            string[] Splits = Key.Split('|');
-            if (Splits.Length >= 2 && Value is not null)
-            {
-                string ConfigurationName = Splits[0];
-                string PlatformName = Splits[1];
-                ConfigurationList.Add(new Configuration(this, Value, ConfigurationName, PlatformName));
-            }
+            // Ensures there is at least two elements in Splits.
+            string ExtendedKey = Key + "|";
+
+            string[] Splits = ExtendedKey.Split('|');
+            string ConfigurationName = Splits[0];
+            string PlatformName = Splits[1];
+            ConfigurationList.Add(new Configuration(this, Value, ConfigurationName, PlatformName));
         }
 
         ProjectConfigurations = ConfigurationList.AsReadOnly();

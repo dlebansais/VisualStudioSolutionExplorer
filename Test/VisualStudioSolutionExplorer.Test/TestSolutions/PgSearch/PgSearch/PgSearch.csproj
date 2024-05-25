@@ -1,0 +1,108 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFrameworks>net481;net7.0-windows</TargetFrameworks>
+        <UseWPF>true</UseWPF>
+        <LangVersion>10</LangVersion>
+        <Nullable>enable</Nullable>
+        <Platforms>x64</Platforms>
+        <Version>1.1.404</Version>
+        <Authors>David Le Bansais</Authors>
+        <Company />
+        <Product>PgSearch</Product>
+        <Description>A tool to search through public data in the Project: Gorgon MMORPG</Description>
+        <Copyright>Copyright © David Le Bansais 2024</Copyright>
+        <AssemblyVersion>1.1.404.688</AssemblyVersion>
+        <FileVersion>1.1.404.668</FileVersion>
+        <RepositoryUrl>https://github.com/dlebansais/PgSearch</RepositoryUrl>
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <RootNamespace>PgSearch</RootNamespace>
+        <ApplicationIcon>Resources\main.ico</ApplicationIcon>
+        <NoWarn>SA0001</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net481|x64'">
+        <DefineConstants>$(DefineConstants);BIGSEARCH</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Remove="Resources\main.ico" />
+        <None Remove="Resources\main.png" />
+        <None Remove="Resources\search.png" />
+        <None Remove="Resources\pg.png" />
+        <None Remove="Resources\left_arrow_normal.png" />
+        <None Remove="Resources\left_arrow_disabled.png" />
+        <None Remove="Resources\right_arrow_normal.png" />
+        <None Remove="Resources\right_arrow_disabled.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Resource Include="Resources\main.ico" />
+        <Resource Include="Resources\main.png" />
+        <Resource Include="Resources\search.png" />
+        <Resource Include="Resources\pg.png" />
+        <Resource Include="Resources\left_arrow_normal.png" />
+        <Resource Include="Resources\left_arrow_disabled.png" />
+        <Resource Include="Resources\right_arrow_normal.png" />
+        <Resource Include="Resources\right_arrow_disabled.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.507">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+        <PackageReference Include="dlebansais.BlazorWpfCommonControls-Debug" Version="0.0.9" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+        <PackageReference Include="dlebansais.BlazorWpfCommonControls" Version="0.0.9" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
+        <PackageReference Include="UpdateCheck-Debug" Version="1.0.4" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+        <PackageReference Include="UpdateCheck" Version="1.0.4" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
+        <PackageReference Include="Method.Contracts" Version="1.1.1" />
+        <PackageReference Include="XamlConverterLibrary-Debug" Version="1.0.6" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+        <PackageReference Include="XamlConverterLibrary" Version="1.0.6" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)'=='net481'">
+        <PackageReference Include="Costura.Fody" Version="5.7.0">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Fody" Version="6.8.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <Reference Include="PresentationCore" />
+        <Reference Include="PresentationFramework" />
+        <Reference Include="WindowsBase" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\WpfLayout.Wpf\WpfLayout.Wpf.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="PgObjects">
+            <HintPath>..\Dependencies\PgObjects\$(Platform)\$(Configuration)\$(TargetFramework)\PgObjects.dll</HintPath>
+        </Reference>
+        <Reference Include="PgIcons">
+            <HintPath>..\Dependencies\PgIcons\$(Platform)\$(Configuration)\$(TargetFramework)\PgIcons.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <Target Name="_ResolveCopyLocalNuGetPackagePdbsAndXml" Condition="$(CopyLocalLockFileAssemblies) == true" AfterTargets="ResolveReferences">
+        <ItemGroup>
+            <ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).pdb')" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != '' And Exists('%(RootDir)%(Directory)%(Filename).pdb') " />
+            <ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).xml')" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != '' And Exists('%(RootDir)%(Directory)%(Filename).xml') " />
+        </ItemGroup>
+    </Target>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(SolutionDir)'!='*Undefined*'">
+        <Exec Command="if exist &quot;$(SolutionDir)updatecommit.bat&quot; call &quot;$(SolutionDir)updatecommit.bat&quot; &quot;$(SolutionDir)&quot; &quot;$(TargetPath)&quot;" />
+        <Exec Command="if exist &quot;$(SolutionDir)signfile.bat&quot; call &quot;$(SolutionDir)signfile.bat&quot; &quot;$(SolutionDir)&quot; &quot;$(Configuration)-$(Platform)&quot; &quot;$(TargetPath)&quot;" Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    </Target>
+
+</Project>

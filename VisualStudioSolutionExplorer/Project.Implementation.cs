@@ -246,7 +246,7 @@ public partial class Project
 
         foreach (FrameworkMoniker? MonikerValue in typeof(FrameworkMoniker).GetEnumValues())
         {
-            if (MonikerValue is null or FrameworkMoniker.none)
+            if (MonikerValue == FrameworkMoniker.none)
                 continue;
 
             string MonikerName = MonikerValue.Value.ToString();
@@ -317,12 +317,6 @@ public partial class Project
         if (Versions.Length == 2)
         {
             if (int.TryParse(Versions[0], out major) && int.TryParse(Versions[1], out minor))
-                return true;
-        }
-        else if (Versions.Length == 1)
-        {
-            string Version = Versions[0];
-            if (Version.Length > 1 && int.TryParse(Version.Substring(0, 1), out major) && int.TryParse(Version.Substring(1), out minor))
                 return true;
         }
 

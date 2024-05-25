@@ -3,7 +3,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 #if !NET481
 using Microsoft.Build.Construction;
@@ -101,22 +103,14 @@ public partial class Project
     {
 #if NET481
         System.Collections.IEnumerable DependenciesValue = (System.Collections.IEnumerable)ReflectionTools.GetPropertyValue(ProjectInSolutionDependencies, solutionProject);
-        List<string> DependencyList = new();
-        foreach (string Item in DependenciesValue)
-            DependencyList.Add(Item);
-        Dependencies = DependencyList.AsReadOnly();
+        Dependencies = DependenciesValue.Cast<string>().ToList().AsReadOnly();
 
         System.Collections.IEnumerable ProjectReferencesValue = (System.Collections.IEnumerable)ReflectionTools.GetPropertyValue(ProjectInSolutionProjectReferences, solutionProject);
-        List<string> ProjectReferenceList = new();
-        foreach (string Item in ProjectReferencesValue)
-            ProjectReferenceList.Add(Item);
-        ProjectReferences = ProjectReferenceList.AsReadOnly();
+        ProjectReferences = ProjectReferencesValue.Cast<string>().ToList().AsReadOnly();
 
+        // If ParentProjectGuidValue is null, ParentProjectGuid is set to string.Empty.
         object? ParentProjectGuidValue = ProjectInSolutionParentProjectGuid.GetValue(solutionProject);
-        if (ParentProjectGuidValue is not null)
-            ParentProjectGuid = (string)ParentProjectGuidValue;
-        else
-            ParentProjectGuid = string.Empty;
+        ParentProjectGuid = Convert.ToString(ParentProjectGuidValue, CultureInfo.InvariantCulture);
 #else
         ProjectInSolution ProjectInSolution = (ProjectInSolution)solutionProject;
 
@@ -140,15 +134,15 @@ public partial class Project
         List<Configuration> ConfigurationList = new();
         foreach (string Key in ProjectConfigurationsValue.Keys)
         {
-            object? Value = ProjectConfigurationsValue[Key];
+            object Value = ProjectConfigurationsValue[Key];
 
-            string[] Splits = Key.Split('|');
-            if (Splits.Length >= 2 && Value is not null)
-            {
-                string ConfigurationName = Splits[0];
-                string PlatformName = Splits[1];
-                ConfigurationList.Add(new Configuration(this, Value, ConfigurationName, PlatformName));
-            }
+            // Ensures there is at least two elements in Splits.
+            string ExtendedKey = Key + "|";
+
+            string[] Splits = ExtendedKey.Split('|');
+            string ConfigurationName = Splits[0];
+            string PlatformName = Splits[1];
+            ConfigurationList.Add(new Configuration(this, Value, ConfigurationName, PlatformName));
         }
 
         ProjectConfigurations = ConfigurationList.AsReadOnly();

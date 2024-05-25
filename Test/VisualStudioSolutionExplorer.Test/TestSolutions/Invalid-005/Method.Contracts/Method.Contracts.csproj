@@ -1,0 +1,81 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp3.1;net481;net8.0</TargetFrameworks>
+        <LangVersion>12</LangVersion>
+        <Nullable>invalid</Nullable>
+        <Platforms>x64</Platforms>
+
+        <RootNamespace>Contracts</RootNamespace>
+        <Version>1.4.2</Version>
+        <Authors>David Le Bansais</Authors>
+        <Company />
+        <Product />
+        <Description>A set of tools to enforce contracts in methods</Description>
+        <Copyright>Copyright © 2024 David Le Bansais</Copyright>
+        <AssemblyVersion>1.4.2.36</AssemblyVersion>
+        <FileVersion>1.4.2.36</FileVersion>
+        <RepositoryUrl>https://github.com/dlebansais/Method.Contracts</RepositoryUrl>
+        <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisLevel>latest-all</AnalysisLevel>
+        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(APPVEYOR)' == 'True'">
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\.editorconfig" Link=".editorconfig" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.556">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="dlebansais.CSharpLatest" Version="0.0.7">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="ConsistencyAnalyzer" Version="1.3.22">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="IDisposableAnalyzers" Version="4.0.7">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="PolySharp" Version="1.14.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(SolutionDir)'!='*Undefined*'">
+        <Exec Command="if exist &quot;$(SolutionDir)updatecommit.bat&quot; call &quot;$(SolutionDir)updatecommit.bat&quot; &quot;$(SolutionDir)&quot; &quot;$(TargetPath)&quot;" />
+        <Exec Command="if exist &quot;$(SolutionDir)signfile.bat&quot; call &quot;$(SolutionDir)signfile.bat&quot; &quot;$(SolutionDir)&quot; &quot;$(Configuration)-$(Platform)&quot; &quot;$(TargetPath)&quot;" Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+        <Exec Command="if not exist &quot;$(SolutionDir)nuget-debug\lib\$(TargetFramework)&quot; mkdir &quot;$(SolutionDir)nuget-debug\lib\$(TargetFramework)&quot;" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+        <Exec Command="if exist &quot;$(TargetPath)&quot; copy &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(SolutionDir)nuget-debug\lib\$(TargetFramework)\&quot; &gt; nul" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+        <Exec Command="if exist &quot;$(TargetPath)&quot; copy &quot;$(TargetDir)$(ProjectName).pdb&quot; &quot;$(SolutionDir)nuget-debug\lib\$(TargetFramework)\&quot; &gt; nul" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+        <Exec Command="if exist &quot;$(TargetPath)&quot; copy &quot;$(TargetDir)$(ProjectName).xml&quot; &quot;$(SolutionDir)nuget-debug\lib\$(TargetFramework)\&quot; &gt; nul" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+        <Exec Command="if not exist &quot;$(SolutionDir)nuget\lib\$(TargetFramework)&quot; mkdir &quot;$(SolutionDir)nuget\lib\$(TargetFramework)&quot;" Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+        <Exec Command="if exist &quot;$(TargetPath)&quot; copy &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(SolutionDir)nuget\lib\$(TargetFramework)\&quot; &gt; nul" Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+        <Exec Command="if exist &quot;$(TargetPath)&quot; copy &quot;$(TargetDir)$(ProjectName).xml&quot; &quot;$(SolutionDir)nuget\lib\$(TargetFramework)\&quot; &gt; nul" Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    </Target>
+
+</Project>

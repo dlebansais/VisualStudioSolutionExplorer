@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFrameworks>net8.0</TargetFrameworks>
+        <LangVersion>12</LangVersion>
+        <Nullable>enable</Nullable>
+        <Platforms>x64</Platforms>
+
+        <RootNamespace>Contracts.Analyzers.Demo</RootNamespace>
+        <Authors>David Le Bansais</Authors>
+
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <ContractSourceGenerator_VerifiedSuffix>DemoVerified</ContractSourceGenerator_VerifiedSuffix>
+        <ContractSourceGenerator_TabLength>8</ContractSourceGenerator_TabLength>
+        <ContractSourceGenerator_ResultIdentifier>DemoResult</ContractSourceGenerator_ResultIdentifier>
+
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <CompilerVisibleProperty Include="ContractSourceGenerator_VerifiedSuffix;ContractSourceGenerator_TabLength;ContractSourceGenerator_ResultIdentifier" />
+    </ItemGroup>
+    
+    <PropertyGroup Condition="'$(APPVEYOR)' == 'True' And '$(TargetFramework)' == 'net481'">
+        <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\..\.editorconfig" Link=".editorconfig" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Method.Contracts-Debug" Version="1.4.2" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+        <PackageReference Include="Method.Contracts" Version="1.4.2" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Method.Contracts.Analyzers-Debug" Version="1.4.1" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Method.Contracts.Analyzers" Version="1.4.1" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+    
+</Project>

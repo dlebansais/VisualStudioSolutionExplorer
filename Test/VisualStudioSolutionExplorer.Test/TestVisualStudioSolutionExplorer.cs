@@ -68,7 +68,7 @@ public class TestVisualStudioSolutionExplorer
 
 #if NET481_OR_GREATER
     [Test]
-    public void TestfromReader()
+    public void TestFromReader()
     {
         string RootPath = Path.Combine(TestTools.GetExecutingProjectRootPath(), TestSolutionsFolder);
         const string TestSolution = "Method.Contracts";
@@ -119,7 +119,7 @@ public class TestVisualStudioSolutionExplorer
     }
 #else
     [Test]
-    public void TestfromReader()
+    public void TestFromReader()
     {
         string RootPath = Path.Combine(TestTools.GetExecutingProjectRootPath(), TestSolutionsFolder);
         const string TestSolution = "Method.Contracts";
@@ -417,7 +417,10 @@ public class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            bool IsUnknownFormat = Project.ProjectType == ProjectType.Unknown;
+            bool IsMSBuildFormat = Project.ProjectType == ProjectType.KnownToBeMSBuildFormat;
+
+            if (IsUnknownFormat || IsMSBuildFormat)
             {
                 string ProjectPath = Path.Combine(RootPath, TestSolution, Project.RelativePath);
                 Project.LoadDetails(ProjectPath);

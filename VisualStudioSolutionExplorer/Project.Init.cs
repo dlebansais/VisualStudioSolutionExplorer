@@ -66,12 +66,13 @@ public partial class Project
 #endif
     }
 
-    private void InitProjectType(object solutionProject)
+    /// <summary>
+    /// Converts a project type in VS format to <see cref="ProjectType"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    internal static ProjectType ConvertToProjectType(object value)
     {
-#if NET481
-        var ProjectTypeValue = ReflectionTools.GetPropertyValue(ProjectInSolutionProjectType, solutionProject);
-
-        ProjectType = ProjectTypeValue.ToString() switch
+        return value.ToString() switch
         {
             "Unknown" => ProjectType.Unknown,
             "KnownToBeMSBuildFormat" => ProjectType.KnownToBeMSBuildFormat,
@@ -82,20 +83,16 @@ public partial class Project
             "SharedProject" => ProjectType.SharedProject,
             _ => ProjectType.Invalid,
         };
+    }
+
+    private void InitProjectType(object solutionProject)
+    {
+#if NET481
+        var ProjectTypeValue = ReflectionTools.GetPropertyValue(ProjectInSolutionProjectType, solutionProject);
+        ProjectType = ConvertToProjectType(ProjectTypeValue);
 #else
         ProjectInSolution ProjectInSolution = (ProjectInSolution)solutionProject;
-
-        ProjectType = ProjectInSolution.ProjectType switch
-        {
-            SolutionProjectType.Unknown => ProjectType.Unknown,
-            SolutionProjectType.KnownToBeMSBuildFormat => ProjectType.KnownToBeMSBuildFormat,
-            SolutionProjectType.SolutionFolder => ProjectType.SolutionFolder,
-            SolutionProjectType.WebProject => ProjectType.WebProject,
-            SolutionProjectType.WebDeploymentProject => ProjectType.WebDeploymentProject,
-            SolutionProjectType.EtpSubProject => ProjectType.EtpSubProject,
-            SolutionProjectType.SharedProject => ProjectType.SharedProject,
-            _ => ProjectType.Invalid,
-        };
+        ProjectType = ConvertToProjectType(ProjectInSolution.ProjectType);
 #endif
     }
 

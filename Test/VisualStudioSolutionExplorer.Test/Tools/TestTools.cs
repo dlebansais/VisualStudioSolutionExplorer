@@ -15,7 +15,7 @@ public static class TestTools
         while (Continue)
         {
             string? ParentFolder = Path.GetDirectoryName(CurrentDirectory);
-            string? FileName = Path.GetFileName(CurrentDirectory);
+            string FileName = Path.GetFileName(CurrentDirectory)!;
 
             switch (FileName)
             {

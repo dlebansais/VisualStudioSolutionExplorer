@@ -30,5 +30,7 @@ public class TestProjectType
                 Assert.That(Project.ConvertToProjectType(Names[i]), Is.EqualTo(Type));
             }
         }
+
+        Assert.That(Project.ConvertToProjectType("12345"), Is.EqualTo(ProjectType.Invalid));
     }
 }

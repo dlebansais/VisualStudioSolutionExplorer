@@ -70,29 +70,33 @@ public partial class Project
     /// Converts a project type in VS format to <see cref="ProjectType"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
-    internal static ProjectType ConvertToProjectType(object value)
+    internal static ProjectType ConvertToProjectType(string value)
     {
-        return value.ToString() switch
+        Dictionary<string, ProjectType> ConversionTable = new()
         {
-            "Unknown" => ProjectType.Unknown,
-            "KnownToBeMSBuildFormat" => ProjectType.KnownToBeMSBuildFormat,
-            "SolutionFolder" => ProjectType.SolutionFolder,
-            "WebProject" => ProjectType.WebProject,
-            "WebDeploymentProject" => ProjectType.WebDeploymentProject,
-            "EtpSubProject" => ProjectType.EtpSubProject,
-            "SharedProject" => ProjectType.SharedProject,
-            _ => ProjectType.Invalid,
+            { "Unknown", ProjectType.Unknown },
+            { "KnownToBeMSBuildFormat", ProjectType.KnownToBeMSBuildFormat },
+            { "SolutionFolder", ProjectType.SolutionFolder },
+            { "WebProject", ProjectType.WebProject },
+            { "WebDeploymentProject", ProjectType.WebDeploymentProject },
+            { "EtpSubProject", ProjectType.EtpSubProject },
+            { "SharedProject", ProjectType.SharedProject },
         };
+
+        if (ConversionTable.TryGetValue(value, out var Result))
+            return Result;
+        else
+            return ProjectType.Invalid;
     }
 
     private void InitProjectType(object solutionProject)
     {
 #if NET481
         var ProjectTypeValue = ReflectionTools.GetPropertyValue(ProjectInSolutionProjectType, solutionProject);
-        ProjectType = ConvertToProjectType(ProjectTypeValue);
+        ProjectType = ConvertToProjectType(ProjectTypeValue.ToString());
 #else
         ProjectInSolution ProjectInSolution = (ProjectInSolution)solutionProject;
-        ProjectType = ConvertToProjectType(ProjectInSolution.ProjectType);
+        ProjectType = ConvertToProjectType(ProjectInSolution.ProjectType.ToString());
 #endif
     }
 

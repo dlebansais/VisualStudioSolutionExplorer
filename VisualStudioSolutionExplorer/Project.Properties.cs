@@ -197,4 +197,9 @@ public partial class Project
     /// Gets the list of package references.
     /// </summary>
     public IReadOnlyList<PackageReference> PackageReferenceList { get; private set; } = new List<PackageReference>().AsReadOnly();
+
+    /// <summary>
+    /// Gets a value indicating whether the project produces an output.
+    /// </summary>
+    public bool IsProjectWithOutput { get => ProjectType != ProjectType.SolutionFolder; }
 }

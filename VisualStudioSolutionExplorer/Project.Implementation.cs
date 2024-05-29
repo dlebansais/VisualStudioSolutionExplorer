@@ -93,7 +93,11 @@ public partial class Project
         if (UseWindowsFormsElement is not null)
             UseWindowsForms = string.Equals(UseWindowsFormsElement.Value, "true", StringComparison.OrdinalIgnoreCase);
 
-        if (ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+        bool IsProjectWithOutput = false;
+        IsProjectWithOutput |= ProjectType == ProjectType.Unknown;
+        IsProjectWithOutput |= ProjectType == ProjectType.KnownToBeMSBuildFormat;
+
+        if (IsProjectWithOutput)
         {
             if (OutputType.Length == 0 || OutputType == "Library")
                 ProjectType = ProjectType.Library;

@@ -22,7 +22,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -51,7 +51,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -80,7 +80,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -104,7 +104,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -131,7 +131,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -162,7 +162,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -189,7 +189,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -216,7 +216,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -243,7 +243,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -270,7 +270,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -297,7 +297,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -324,7 +324,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -351,7 +351,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -378,7 +378,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -408,7 +408,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -438,7 +438,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -468,7 +468,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -495,7 +495,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -522,7 +522,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -549,7 +549,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, InvalidSolutionFolder, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);

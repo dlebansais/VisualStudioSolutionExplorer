@@ -2,7 +2,6 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using NUnit.Framework;
 using SlnExplorer;
 
@@ -24,7 +23,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, TestSolution, Project.RelativePath);
                 Project.LoadDetails(ProjectPath);
@@ -82,7 +81,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, TestSolution, Project.RelativePath);
                 Project.LoadDetails(ProjectPath);
@@ -146,7 +145,11 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            bool IsProjectWithOutput = false;
+            IsProjectWithOutput |= Project.ProjectType == ProjectType.Unknown;
+            IsProjectWithOutput |= Project.ProjectType == ProjectType.KnownToBeMSBuildFormat;
+
+            if (IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, TestSolution, Project.RelativePath);
                 using FileStream Stream = new(ProjectPath, FileMode.Open, FileAccess.Read);
@@ -171,7 +174,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, TestSolution, Project.RelativePath);
                 Project.LoadDetails(ProjectPath);
@@ -195,7 +198,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, TestSolution, Project.RelativePath);
                 Project.LoadDetails(ProjectPath);
@@ -224,7 +227,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, TestSolution, Project.RelativePath);
                 Project.LoadDetails(ProjectPath);
@@ -253,7 +256,7 @@ public partial class TestVisualStudioSolutionExplorer
 
         foreach (Project Project in NewSolution.ProjectList)
         {
-            if (Project.ProjectType is ProjectType.Unknown or ProjectType.KnownToBeMSBuildFormat)
+            if (Project.IsProjectWithOutput)
             {
                 string ProjectPath = Path.Combine(RootPath, TestSolution, Project.RelativePath);
                 Project.LoadDetails(ProjectPath);
@@ -291,5 +294,34 @@ public partial class TestVisualStudioSolutionExplorer
                 Assert.That(Project.UseWindowsForms, Is.False);
             }
         }
+    }
+
+    [Test]
+    public void TestSolutionItems()
+    {
+        string RootPath = Path.Combine(TestTools.GetExecutingProjectRootPath(), TestSolutionsFolder);
+        const string TestSolution = "UpdateCheck";
+
+        Solution NewSolution = new(Path.Combine(RootPath, TestSolution, $"{TestSolution}.sln"));
+
+        Assert.That(NewSolution.Name, Is.EqualTo(TestSolution));
+
+        foreach (Project Project in NewSolution.ProjectList)
+            if (Project.ProjectType != ProjectType.SolutionFolder)
+            {
+                string ProjectPath = Path.Combine(RootPath, TestSolution, Project.RelativePath);
+                Project.LoadDetails(ProjectPath);
+
+                bool HasError = Project.CheckVersionConsistency(out _);
+
+                Assert.That(HasError, Is.False);
+
+                if (Project.ProjectName == $"{TestSolution}.Demo")
+                {
+                    Assert.That(Project.ProjectType, Is.EqualTo(ProjectType.WinExe));
+                    Assert.That(Project.UseWpf, Is.True);
+                    Assert.That(Project.UseWindowsForms, Is.False);
+                }
+            }
     }
 }

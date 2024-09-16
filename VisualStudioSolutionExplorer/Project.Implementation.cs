@@ -331,7 +331,7 @@ public partial class Project
     {
         ParseProjectElementEditorConfigLink(projectElement);
         ParseProjectElementPackageReference(packageReferenceList, projectElement);
-        Project.ParseProjectElementProjectReference(projectReferenceList, projectElement);
+        ParseProjectElementProjectReference(projectReferenceList, projectElement);
     }
 
     private void ParseProjectElementEditorConfigLink(XElement projectElement)

@@ -5,45 +5,9 @@ using System.Diagnostics;
 /// <summary>
 /// Reads and parses a project file.
 /// </summary>
+/// <param name="Project">Gets the project.</param>
+/// <param name="Name">Gets the package name.</param>
+/// <param name="Version">Gets the package version.</param>
+/// <param name="Condition">Gets the package condition.</param>
 [DebuggerDisplay("{Name} Version {Version}")]
-public class PackageReference
-{
-    #region Init
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PackageReference"/> class.
-    /// </summary>
-    /// <param name="project">The project containing the configuration.</param>
-    /// <param name="name">The package name.</param>
-    /// <param name="version">The package version.</param>
-    /// <param name="condition">The package condition.</param>
-    internal PackageReference(Project project, string name, string version, string condition)
-    {
-        Project = project;
-        Name = name;
-        Version = version;
-        Condition = condition;
-    }
-    #endregion
-
-    #region Properties
-    /// <summary>
-    /// Gets the project.
-    /// </summary>
-    public Project Project { get; }
-
-    /// <summary>
-    /// Gets the package name.
-    /// </summary>
-    public string Name { get; }
-
-    /// <summary>
-    /// Gets the package version.
-    /// </summary>
-    public string Version { get; }
-
-    /// <summary>
-    /// Gets the package condition.
-    /// </summary>
-    public string Condition { get; }
-    #endregion
-}
+public record PackageReference(Project Project, string Name, string Version, string Condition);

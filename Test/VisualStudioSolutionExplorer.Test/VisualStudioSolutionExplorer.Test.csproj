@@ -1,14 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net481;net8.0</TargetFrameworks>
-        <LangVersion>12</LangVersion>
+        <TargetFrameworks>net481;net8.0;net9.0</TargetFrameworks>
+        <LangVersion>13</LangVersion>
         <Nullable>enable</Nullable>
         <Platforms>x64</Platforms>
         <IsTestProject>true</IsTestProject>
         
         <RootNamespace>VisualStudioSolutionExplorer.Test</RootNamespace>
-        
+
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NeutralLanguage>en-US</NeutralLanguage>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
@@ -22,14 +23,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="dlebansais.CSharpLatest" Version="1.0.5">
+        <PackageReference Include="dlebansais.CSharpLatest" Version="1.1.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-        <PackageReference Include="NUnit" Version="4.2.2" />
-        <PackageReference Include="NUnit.Analyzers" Version="4.3.0">
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+        <PackageReference Include="NUnit" Version="4.3.0" />
+        <PackageReference Include="NUnit.Analyzers" Version="4.4.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

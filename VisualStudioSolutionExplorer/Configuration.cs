@@ -1,9 +1,10 @@
 ﻿namespace SlnExplorer;
 
-using System;
 using System.Diagnostics;
+#if NET481
+using System;
 using System.Reflection;
-#if !NET481
+#else
 using Microsoft.Build.Construction;
 #endif
 
@@ -11,7 +12,9 @@ using Microsoft.Build.Construction;
 /// Reads and parses a project file.
 /// </summary>
 [DebuggerDisplay("{ConfigurationName}|{PlatformName}")]
+#pragma warning disable CA1724 // Type names should not match namespaces
 public class Configuration
+#pragma warning restore CA1724 // Type names should not match namespaces
 {
     #region Init
 #if NET481

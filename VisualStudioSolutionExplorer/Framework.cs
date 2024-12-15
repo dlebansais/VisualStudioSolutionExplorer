@@ -6,7 +6,9 @@ using System.Diagnostics;
 /// Defines a framework supported by the project.
 /// </summary>
 [DebuggerDisplay("{Name}")]
+#pragma warning disable CA1724 // Type names should not match namespaces
 public class Framework
+#pragma warning restore CA1724 // Type names should not match namespaces
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Framework"/> class.
@@ -105,8 +107,5 @@ public class Framework
     /// Returns a string that represents the current object.
     /// </summary>
     /// <returns>The current object as a string.</returns>
-    public override string ToString()
-    {
-        return Name;
-    }
+    public override string ToString() => Name;
 }

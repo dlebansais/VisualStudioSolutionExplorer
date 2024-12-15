@@ -28,15 +28,15 @@ public partial class Project
         foreach (XElement ProjectElement in Root.Descendants("PropertyGroup"))
             ParseProjectPropertyGroup(ProjectElement);
 
-        List<Framework> ParsedFrameworkList = new();
+        List<Framework> ParsedFrameworkList = [];
 
         if (TargetFrameworks.Length > 0)
             ParseTargetFrameworks(ParsedFrameworkList);
 
         FrameworkList = ParsedFrameworkList.AsReadOnly();
 
-        List<PackageReference> ParsedPackageReferenceList = new();
-        List<string> ParsedProjectReferenceList = new();
+        List<PackageReference> ParsedPackageReferenceList = [];
+        List<string> ParsedProjectReferenceList = [];
         IEnumerable<XElement> ItemGroups = Root.Descendants("ItemGroup");
 
         foreach (XElement ProjectElement in ItemGroups)
@@ -117,21 +117,14 @@ public partial class Project
         XElement? NullableElement = projectElement.Element("Nullable");
         if (NullableElement is not null)
         {
-            switch (NullableElement.Value.ToUpper(CultureInfo.InvariantCulture))
+            Nullable = NullableElement.Value.ToUpper(CultureInfo.InvariantCulture) switch
             {
-                case "ENABLE":
-                    Nullable = NullableAnnotation.Enable;
-                    break;
-                case "WARNINGS":
-                    Nullable = NullableAnnotation.Warnings;
-                    break;
-                case "ANNOTATIONS":
-                    Nullable = NullableAnnotation.Annotations;
-                    break;
-                case "DISABLE":
-                    Nullable = NullableAnnotation.Disable;
-                    break;
-            }
+                "ENABLE" => NullableAnnotation.Enable,
+                "WARNINGS" => NullableAnnotation.Warnings,
+                "ANNOTATIONS" => NullableAnnotation.Annotations,
+                "DISABLE" => NullableAnnotation.Disable,
+                _ => NullableAnnotation.None,
+            };
         }
 
         XElement? NeutralLanguageElement = projectElement.Element("NeutralLanguage");
@@ -193,7 +186,9 @@ public partial class Project
     {
         XElement? TargetFrameworkElement = projectElement.Element("TargetFramework");
         if (TargetFrameworkElement is not null)
+        {
             TargetFrameworks = TargetFrameworkElement.Value;
+        }
         else
         {
             XElement? TargetFrameworksElement = projectElement.Element("TargetFrameworks");
@@ -222,7 +217,7 @@ public partial class Project
 
     private static void ParseTargetFrameworkNetStandard(List<Framework> parsedFrameworkList, string frameworkName)
     {
-        string VersionString = frameworkName.Substring(NetStandardPattern.Length);
+        string VersionString = frameworkName[NetStandardPattern.Length..];
 
         if (ParseNetVersion(VersionString, out int Major, out int Minor))
         {
@@ -233,7 +228,7 @@ public partial class Project
 
     private static void ParseTargetFrameworkNetCore(List<Framework> parsedFrameworkList, string frameworkName)
     {
-        string VersionString = frameworkName.Substring(NetCorePattern.Length);
+        string VersionString = frameworkName[NetCorePattern.Length..];
 
         if (ParseNetVersion(VersionString, out int Major, out int Minor))
         {
@@ -259,19 +254,19 @@ public partial class Project
             if (MonikerIndex > 0)
             {
                 Moniker = MonikerValue.Value;
-                MonikerString = FrameworkString.Substring(MonikerIndex + 1);
-                FrameworkString = FrameworkString.Substring(0, MonikerIndex);
+                MonikerString = FrameworkString[(MonikerIndex + 1)..];
+                FrameworkString = FrameworkString[..MonikerIndex];
                 break;
             }
         }
 
-        string FrameworkVersionString = FrameworkString.Substring(NetFrameworkPattern.Length);
+        string FrameworkVersionString = FrameworkString[NetFrameworkPattern.Length..];
 
         if (ParseNetVersion(FrameworkVersionString, out int Major, out int Minor))
         {
             if (Moniker != FrameworkMoniker.none)
             {
-                string MonikerVersionString = MonikerString.Substring(Moniker.ToString().Length);
+                string MonikerVersionString = MonikerString[Moniker.ToString().Length..];
                 if (ParseMonikerVersion(MonikerVersionString, out int MonikerMajor, out int MonikerMinor))
                 {
                     Framework NewFramework = new(frameworkName, FrameworkType.NetFramework, Major, Minor, Moniker, MonikerMajor, MonikerMinor);
@@ -305,7 +300,7 @@ public partial class Project
         else if (Versions.Length == 1)
         {
             string Version = Versions[0];
-            if (Version.Length > 1 && int.TryParse(Version.Substring(0, 1), out major) && int.TryParse(Version.Substring(1), out minor))
+            if (Version.Length > 1 && int.TryParse(Version[..1], out major) && int.TryParse(Version[1..], out minor))
                 return true;
         }
 

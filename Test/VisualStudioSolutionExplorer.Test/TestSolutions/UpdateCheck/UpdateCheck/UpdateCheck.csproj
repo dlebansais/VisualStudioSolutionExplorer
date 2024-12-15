@@ -67,16 +67,16 @@
         </PackageReference>
         <PackageReference Include="System.Net.Http" Version="4.3.4" />
         <PackageReference Include="Octokit" Version="11.0.1" />
-        <PackageReference Include="Method.Contracts.Analyzers-Debug" Version="1.4.4" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+        <PackageReference Include="Method.Contracts.Analyzers-Debug" Version="1.5.1" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Method.Contracts.Analyzers" Version="1.4.4" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'">
+        <PackageReference Include="Method.Contracts.Analyzers" Version="1.5.1" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Method.Contracts-Debug" Version="1.4.2" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
-        <PackageReference Include="Method.Contracts" Version="1.4.2" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
+        <PackageReference Include="Method.Contracts-Debug" Version="1.5.0" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+        <PackageReference Include="Method.Contracts" Version="1.5.0" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)'=='net48'">

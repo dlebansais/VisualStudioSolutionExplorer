@@ -1,12 +1,14 @@
 ﻿namespace VisualStudioSolutionExplorer.Test;
 
+#if !NET481_OR_GREATER
 using System;
+#endif
 using System.IO;
 using NUnit.Framework;
 using SlnExplorer;
 
 [TestFixture]
-public partial class TestVisualStudioSolutionExplorer
+internal partial class TestVisualStudioSolutionExplorer
 {
     private const string TestSolutionsFolder = "TestSolutions";
 
@@ -41,7 +43,7 @@ public partial class TestVisualStudioSolutionExplorer
                 Assert.That(Project.HasRepositoryUrl, Is.True);
                 Assert.That(Project.HasTargetFrameworks, Is.True);
 
-                Assert.That(Project.ProjectConfigurations.Count , Is.EqualTo(2));
+                Assert.That(Project.ProjectConfigurations.Count, Is.EqualTo(2));
 
                 Configuration FirstConfiguration = Project.ProjectConfigurations[0];
                 Assert.That(FirstConfiguration.Project, Is.EqualTo(Project));

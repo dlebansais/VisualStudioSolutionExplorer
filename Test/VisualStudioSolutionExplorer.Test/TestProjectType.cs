@@ -6,7 +6,7 @@ using NUnit.Framework;
 using SlnExplorer;
 
 [TestFixture]
-public class TestProjectType
+internal class TestProjectType
 {
     [Test]
     public void TestConversion()

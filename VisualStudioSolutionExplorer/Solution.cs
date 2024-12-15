@@ -1,15 +1,13 @@
 ﻿namespace SlnExplorer;
 
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 #if NET481
+using System.Reflection;
 using Contracts;
 #else
-using System.Reflection.PortableExecutable;
-using Contracts;
 using Microsoft.Build.Construction;
 #endif
 
@@ -62,7 +60,7 @@ public class Solution
     private void Initialize(StreamReader reader)
     {
         ConstructorInfo Constructor = ReflectionTools.GetFirstTypeConstructor(SolutionParserType);
-        var SolutionParser = Constructor.Invoke(null);
+        object SolutionParser = Constructor.Invoke(null);
 
         SolutionParserReader.SetValue(SolutionParser, reader, null);
         _ = SolutionParserParseSolution.Invoke(SolutionParser, null);
@@ -110,6 +108,6 @@ public class Solution
     /// <summary>
     /// Gets the list of projects in the solution.
     /// </summary>
-    public List<Project> ProjectList { get; } = new();
+    public Collection<Project> ProjectList { get; } = [];
     #endregion
 }

@@ -201,5 +201,5 @@ public partial class Project
     /// <summary>
     /// Gets a value indicating whether the project produces an output.
     /// </summary>
-    public bool IsProjectWithOutput { get => ProjectType != ProjectType.SolutionFolder; }
+    public bool IsProjectWithOutput => ProjectType != ProjectType.SolutionFolder;
 }

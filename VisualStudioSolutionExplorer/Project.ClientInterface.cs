@@ -21,10 +21,7 @@ public partial class Project
     /// Loads project details from a stream.
     /// </summary>
     /// <param name="stream">The stream.</param>
-    public void LoadDetails(Stream stream)
-    {
-        ParseProjectElements(stream);
-    }
+    public void LoadDetails(Stream stream) => ParseProjectElements(stream);
 
     /// <summary>
     /// Checks a loaded for version consistency.
@@ -51,7 +48,9 @@ public partial class Project
             }
         }
         else
+        {
             warningOrErrorText = "Ignored because no version";
+        }
 
         return HasErrors;
     }

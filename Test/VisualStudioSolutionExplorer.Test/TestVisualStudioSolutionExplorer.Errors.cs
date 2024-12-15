@@ -1,13 +1,15 @@
 ﻿namespace VisualStudioSolutionExplorer.Test;
 
+#if !NETFRAMEWORK
 using System;
+#endif
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using SlnExplorer;
 
 [TestFixture]
-public partial class TestVisualStudioSolutionExplorer
+internal partial class TestVisualStudioSolutionExplorer
 {
     [Test]
     public void TestInvalidVersion1()

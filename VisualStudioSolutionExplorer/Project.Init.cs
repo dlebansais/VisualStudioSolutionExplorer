@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
+#if NET481
 using System.Linq;
 using System.Reflection;
-#if !NET481
+#else
+using System.IO;
 using Microsoft.Build.Construction;
 #endif
 
@@ -83,16 +84,15 @@ public partial class Project
             { "SharedProject", ProjectType.SharedProject },
         };
 
-        if (ConversionTable.TryGetValue(value, out var Result))
-            return Result;
-        else
-            return ProjectType.Invalid;
+        return ConversionTable.TryGetValue(value, out ProjectType Result)
+            ? Result
+            : ProjectType.Invalid;
     }
 
     private void InitProjectType(object solutionProject)
     {
 #if NET481
-        var ProjectTypeValue = ReflectionTools.GetPropertyValue(ProjectInSolutionProjectType, solutionProject);
+        object ProjectTypeValue = ReflectionTools.GetPropertyValue(ProjectInSolutionProjectType, solutionProject);
         ProjectType = ConvertToProjectType(ProjectTypeValue.ToString());
 #else
         ProjectInSolution ProjectInSolution = (ProjectInSolution)solutionProject;
@@ -116,7 +116,7 @@ public partial class Project
         ProjectInSolution ProjectInSolution = (ProjectInSolution)solutionProject;
 
         List<string> DependencyList = new(ProjectInSolution.Dependencies);
-        List<string> ProjectReferenceList = new();
+        List<string> ProjectReferenceList = [];
 
         Dependencies = DependencyList.AsReadOnly();
         ProjectReferences = ProjectReferenceList.AsReadOnly();
@@ -131,7 +131,7 @@ public partial class Project
     {
 #if NET481
         System.Collections.IDictionary ProjectConfigurationsValue = (System.Collections.IDictionary)ReflectionTools.GetPropertyValue(ProjectInSolutionProjectConfigurations, solutionProject);
-        List<Configuration> ConfigurationList = new();
+        List<Configuration> ConfigurationList = [];
         foreach (string Key in ProjectConfigurationsValue.Keys)
         {
             object Value = ProjectConfigurationsValue[Key];
@@ -150,7 +150,7 @@ public partial class Project
         ProjectInSolution ProjectInSolution = (ProjectInSolution)solutionProject;
         IReadOnlyDictionary<string, ProjectConfigurationInSolution> ProjectConfigurationsValue = ProjectInSolution.ProjectConfigurations;
 
-        List<Configuration> ConfigurationList = new();
+        List<Configuration> ConfigurationList = [];
         foreach (string Key in ProjectConfigurationsValue.Keys)
         {
             object Value = ProjectConfigurationsValue[Key];

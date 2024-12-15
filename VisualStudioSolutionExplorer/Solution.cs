@@ -1,7 +1,7 @@
 ﻿namespace SlnExplorer;
 
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 #if NET481
@@ -71,7 +71,7 @@ public class Solution
             object SolutionProject = Contract.AssertNotNull(ProjetctArray.GetValue(i));
             Project NewProject = new(this, SolutionProject);
 
-            ProjectList.Add(NewProject);
+            ProjectListInternal.Add(NewProject);
         }
     }
 #else
@@ -88,10 +88,12 @@ public class Solution
         foreach (ProjectInSolution Item in SolutionFile.ProjectsInOrder)
         {
             Project NewProject = new(this, Item);
-            ProjectList.Add(NewProject);
+            ProjectListInternal.Add(NewProject);
         }
     }
 #endif
+
+    private List<Project> ProjectListInternal { get; } = [];
     #endregion
 
     #region Properties
@@ -108,6 +110,6 @@ public class Solution
     /// <summary>
     /// Gets the list of projects in the solution.
     /// </summary>
-    public Collection<Project> ProjectList { get; } = [];
+    public IReadOnlyList<Project> ProjectList => ProjectListInternal.AsReadOnly();
     #endregion
 }

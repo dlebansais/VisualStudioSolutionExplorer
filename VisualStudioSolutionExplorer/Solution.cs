@@ -17,7 +17,6 @@ using Microsoft.Build.Construction;
 [DebuggerDisplay("{Name}")]
 public class Solution
 {
-    #region Init
 #if NET481
     private static readonly Type SolutionParserType = ReflectionTools.GetProjectInSolutionType("SolutionParser");
     private static readonly PropertyInfo SolutionParserReader = ReflectionTools.GetTypeProperty(SolutionParserType, "SolutionReader");
@@ -37,12 +36,12 @@ public class Solution
         Initialize(solutionFileName);
     }
 
+#if NET481
     /// <summary>
     /// Initializes a new instance of the <see cref="Solution"/> class.
     /// </summary>
     /// <param name="name">The solution name.</param>
     /// <param name="reader">A stream with the solution content.</param>
-#if NET481
     public Solution(string name, StreamReader reader)
     {
         SolutionFileName = string.Empty;
@@ -75,6 +74,11 @@ public class Solution
         }
     }
 #else
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Solution"/> class.
+    /// </summary>
+    /// <param name="name">The solution name.</param>
+    /// <param name="reader">A stream with the solution content.</param>
     [Obsolete("Streams not supported except in .NET Framework 4.8. Use a solution file name.")]
     public Solution(string name, StreamReader reader)
     {
@@ -93,10 +97,6 @@ public class Solution
     }
 #endif
 
-    private List<Project> ProjectListInternal { get; } = [];
-    #endregion
-
-    #region Properties
     /// <summary>
     /// Gets the solution file name.
     /// </summary>
@@ -111,5 +111,6 @@ public class Solution
     /// Gets the list of projects in the solution.
     /// </summary>
     public IReadOnlyList<Project> ProjectList => ProjectListInternal.AsReadOnly();
-    #endregion
+
+    private List<Project> ProjectListInternal { get; } = [];
 }

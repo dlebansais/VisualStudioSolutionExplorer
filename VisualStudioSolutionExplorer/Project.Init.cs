@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 #else
 using System.IO;
+using Contracts;
 using Microsoft.Build.Construction;
 #endif
 
@@ -123,7 +124,7 @@ public partial class Project
 
         // If ProjectInSolution.ParentProjectGuid is null, ParentProjectGuid is set to string.Empty.
         object ParentProjectGuidValue = ProjectInSolution.ParentProjectGuid;
-        ParentProjectGuid = Convert.ToString(ParentProjectGuidValue, CultureInfo.InvariantCulture)!;
+        ParentProjectGuid = Contract.AssertNotNull(Convert.ToString(ParentProjectGuidValue, CultureInfo.InvariantCulture));
 #endif
     }
 

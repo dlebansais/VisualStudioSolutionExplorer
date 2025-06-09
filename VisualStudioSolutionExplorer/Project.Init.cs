@@ -116,7 +116,7 @@ public partial class Project
 #else
         ProjectInSolution ProjectInSolution = (ProjectInSolution)solutionProject;
 
-        List<string> DependencyList = new(ProjectInSolution.Dependencies);
+        List<string> DependencyList = [.. ProjectInSolution.Dependencies];
         List<string> ProjectReferenceList = [];
 
         Dependencies = DependencyList.AsReadOnly();

@@ -180,6 +180,18 @@ public partial class Project
         XElement? ApplicationIconElement = projectElement.Element("ApplicationIcon");
         if (ApplicationIconElement is not null)
             ApplicationIcon = ApplicationIconElement.Value;
+
+        XElement? PackageIconElement = projectElement.Element("PackageIcon");
+        if (PackageIconElement is not null)
+            PackageIcon = PackageIconElement.Value;
+
+        XElement? PackageLicenseExpressionElement = projectElement.Element("PackageLicenseExpression");
+        if (PackageLicenseExpressionElement is not null)
+            PackageLicenseExpression = PackageLicenseExpressionElement.Value;
+
+        XElement? PackageReadmeFileElement = projectElement.Element("PackageReadmeFile");
+        if (PackageReadmeFileElement is not null)
+            PackageReadmeFile = PackageReadmeFileElement.Value;
     }
 
     private void ParseProjectElementFrameworks(XElement projectElement)

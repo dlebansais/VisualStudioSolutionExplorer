@@ -95,6 +95,9 @@ public static class Program
         Console.WriteLine($"    Copyright:        {project.Copyright}");
         Console.WriteLine($"    Repository Url:   {(project.RepositoryUrl is null ? "None" : project.RepositoryUrl)}");
         Console.WriteLine($"    Icon:             {project.ApplicationIcon}");
+        Console.WriteLine($"    Package Icon:     {project.PackageIcon}");
+        Console.WriteLine($"    Package License:  {project.PackageLicenseExpression}");
+        Console.WriteLine($"    Package readme:   {project.PackageReadmeFile}");
 
         DisplayProjectPropertiesFrameworkList(project.FrameworkList);
 

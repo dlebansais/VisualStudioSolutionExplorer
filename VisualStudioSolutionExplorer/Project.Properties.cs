@@ -202,4 +202,19 @@ public partial class Project
     /// Gets a value indicating whether the project produces an output.
     /// </summary>
     public bool IsProjectWithOutput => ProjectType != ProjectType.SolutionFolder;
+
+    /// <summary>
+    /// Gets the project package icon.
+    /// </summary>
+    public string PackageIcon { get; private set; } = string.Empty;
+
+    /// <summary>
+    /// Gets the project package license.
+    /// </summary>
+    public string PackageLicenseExpression { get; private set; } = string.Empty;
+
+    /// <summary>
+    /// Gets the project package readme.
+    /// </summary>
+    public string PackageReadmeFile { get; private set; } = string.Empty;
 }

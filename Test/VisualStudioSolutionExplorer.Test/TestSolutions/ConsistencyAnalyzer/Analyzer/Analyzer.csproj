@@ -19,6 +19,9 @@
         <RootNamespace>ConsistencyAnalyzer</RootNamespace>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <PackageIcon>main.png</PackageIcon>
+        <PackageLicenseExpression>0BSD</PackageLicenseExpression>
+        <PackageReadmeFile>README-short.md</PackageReadmeFile>
 
         <!-- Avoid ID conflicts with the package project. -->
         <PackageId>*$(MSBuildProjectFullPath)*</PackageId>

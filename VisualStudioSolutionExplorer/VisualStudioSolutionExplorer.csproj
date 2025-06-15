@@ -7,13 +7,13 @@
         <Platforms>x64</Platforms>
         
         <RootNamespace>SlnExplorer</RootNamespace>
-        <Version>2.0.0</Version>
-        <AssemblyVersion>2.0.0.69</AssemblyVersion>
-        <FileVersion>2.0.0.69</FileVersion>
+        <Version>2.1.0</Version>
+        <AssemblyVersion>2.1.0.71</AssemblyVersion>
+        <FileVersion>2.1.0.70</FileVersion>
         <Authors>David Le Bansais</Authors>
         <Product />
         <Description>Explore .sln files</Description>
-        <Copyright>Copyright © 2024 David Le Bansais</Copyright>
+        <Copyright>Copyright © 2025 David Le Bansais</Copyright>
         <RepositoryUrl>https://github.com/dlebansais/VisualStudioSolutionExplorer</RepositoryUrl>
 
         <NeutralLanguage>en-US</NeutralLanguage>
@@ -28,6 +28,7 @@
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackageLicenseExpression>0BSD</PackageLicenseExpression>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(APPVEYOR)' == 'True'">

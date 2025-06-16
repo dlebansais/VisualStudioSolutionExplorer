@@ -9,5 +9,6 @@ using System.Diagnostics;
 /// <param name="Name">Gets the package name.</param>
 /// <param name="Version">Gets the package version.</param>
 /// <param name="Condition">Gets the package condition.</param>
+/// <param name="IsAllPrivateAssets">Indicate whether all assets are private.</param>
 [DebuggerDisplay("{Name} Version {Version}")]
-public record PackageReference(Project Project, string Name, string Version, string Condition);
+public record PackageReference(Project Project, string Name, string Version, string Condition, bool IsAllPrivateAssets);

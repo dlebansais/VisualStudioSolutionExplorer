@@ -214,17 +214,17 @@ public partial class Project
         string[] Frameworks = TargetFrameworks.Split(';');
 
         foreach (string Framework in Frameworks)
-            Project.ParseTargetFramework(parsedFrameworkList, Framework);
+            ParseTargetFramework(parsedFrameworkList, Framework);
     }
 
     private static void ParseTargetFramework(List<Framework> parsedFrameworkList, string frameworkName)
     {
         if (frameworkName.StartsWith(NetStandardPattern, StringComparison.InvariantCulture))
-            Project.ParseTargetFrameworkNetStandard(parsedFrameworkList, frameworkName);
+            ParseTargetFrameworkNetStandard(parsedFrameworkList, frameworkName);
         else if (frameworkName.StartsWith(NetCorePattern, StringComparison.InvariantCulture))
-            Project.ParseTargetFrameworkNetCore(parsedFrameworkList, frameworkName);
+            ParseTargetFrameworkNetCore(parsedFrameworkList, frameworkName);
         else if (frameworkName.StartsWith(NetFrameworkPattern, StringComparison.InvariantCulture))
-            Project.ParseTargetFrameworkNetFramework(parsedFrameworkList, frameworkName);
+            ParseTargetFrameworkNetFramework(parsedFrameworkList, frameworkName);
     }
 
     private static void ParseTargetFrameworkNetStandard(List<Framework> parsedFrameworkList, string frameworkName)
@@ -370,6 +370,7 @@ public partial class Project
             string Name = string.Empty;
             string Version = string.Empty;
             string Condition = string.Empty;
+            bool IsAllPrivateAssets = false;
 
             foreach (XAttribute Attribute in PackageReferenceElement.Attributes())
             {
@@ -381,13 +382,25 @@ public partial class Project
 
                 if (Attribute.Name == "Condition")
                     Condition = Attribute.Value;
+
+                if (Attribute.Name == "PrivateAssets")
+                    IsAllPrivateAssets = IsAll(Attribute.Value);
             }
+
+            foreach (XElement PackageReferenceItemElement in PackageReferenceElement.Elements())
+                if (PackageReferenceItemElement.Name == "PrivateAssets")
+                    IsAllPrivateAssets = IsAll(PackageReferenceItemElement.Value);
 
             if (Name.Length > 0 && Version.Length > 0)
             {
-                PackageReference NewPackageReference = new(this, Name, Version, Condition);
+                PackageReference NewPackageReference = new(this, Name, Version, Condition, IsAllPrivateAssets);
                 packageReferenceList.Add(NewPackageReference);
             }
+        }
+
+        static bool IsAll(string value)
+        {
+            return value.Equals("All", StringComparison.OrdinalIgnoreCase);
         }
     }
 

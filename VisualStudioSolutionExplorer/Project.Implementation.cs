@@ -81,17 +81,9 @@ public partial class Project
 
     private void ParseProjectElementOutputType(XElement projectElement)
     {
-        XElement? OutputTypeElement = projectElement.Element("OutputType");
-        if (OutputTypeElement is not null)
-            OutputType = OutputTypeElement.Value;
-
-        XElement? UseWPFElement = projectElement.Element("UseWPF");
-        if (UseWPFElement is not null)
-            UseWpf = string.Equals(UseWPFElement.Value, "true", StringComparison.OrdinalIgnoreCase);
-
-        XElement? UseWindowsFormsElement = projectElement.Element("UseWindowsForms");
-        if (UseWindowsFormsElement is not null)
-            UseWindowsForms = string.Equals(UseWindowsFormsElement.Value, "true", StringComparison.OrdinalIgnoreCase);
+        _ = SetPropertyFromElement(projectElement, "OutputType", value => OutputType = value);
+        _ = SetPropertyFromElement(projectElement, "UseWPF", value => UseWpf = IsStringTrue(value));
+        _ = SetPropertyFromElement(projectElement, "UseWindowsForms", value => UseWindowsForms = IsStringTrue(value));
 
         bool IsProjectWithOutput = false;
         IsProjectWithOutput |= ProjectType == ProjectType.Unknown;
@@ -110,9 +102,7 @@ public partial class Project
 
     private void ParseProjectElementOptions(XElement projectElement)
     {
-        XElement? LanguageVersionElement = projectElement.Element("LangVersion");
-        if (LanguageVersionElement is not null)
-            LanguageVersion = LanguageVersionElement.Value;
+        _ = SetPropertyFromElement(projectElement, "LangVersion", value => LanguageVersion = value);
 
         XElement? NullableElement = projectElement.Element("Nullable");
         if (NullableElement is not null)
@@ -127,87 +117,56 @@ public partial class Project
             };
         }
 
-        XElement? NeutralLanguageElement = projectElement.Element("NeutralLanguage");
-        if (NeutralLanguageElement is not null)
-            NeutralLanguage = NeutralLanguageElement.Value;
-
-        XElement? TreatWarningsAsErrorsElement = projectElement.Element("TreatWarningsAsErrors");
-        if (TreatWarningsAsErrorsElement is not null)
-            IsTreatWarningsAsErrors = string.Equals(TreatWarningsAsErrorsElement.Value, "true", StringComparison.OrdinalIgnoreCase);
-
-        XElement? IsTestProjectElement = projectElement.Element("IsTestProject");
-        if (IsTestProjectElement is not null)
-            IsTestProject = string.Equals(IsTestProjectElement.Value, "true", StringComparison.OrdinalIgnoreCase);
-
-        XElement? IsPackableElement = projectElement.Element("IsPackable");
-        if (IsPackableElement is not null)
-            IsNotPackable = string.Equals(IsPackableElement.Value, "false", StringComparison.OrdinalIgnoreCase);
+        _ = SetPropertyFromElement(projectElement, "NeutralLanguage", value => NeutralLanguage = value);
+        _ = SetPropertyFromElement(projectElement, "TreatWarningsAsErrors", value => IsTreatWarningsAsErrors = IsStringTrue(value));
+        _ = SetPropertyFromElement(projectElement, "IsTestProject", value => IsTestProject = IsStringTrue(value));
+        _ = SetPropertyFromElement(projectElement, "IsPackable", value => IsNotPackable = IsStringFalse(value));
     }
 
     private void ParseProjectElementVersion(XElement projectElement)
     {
-        XElement? VersionElement = projectElement.Element("Version");
-        if (VersionElement is not null)
-            Version = VersionElement.Value;
-
-        XElement? AssemblyVersionElement = projectElement.Element("AssemblyVersion");
-        if (AssemblyVersionElement is not null)
-            AssemblyVersion = AssemblyVersionElement.Value;
-
-        XElement? FileVersionElement = projectElement.Element("FileVersion");
-        if (FileVersionElement is not null)
-            FileVersion = FileVersionElement.Value;
+        _ = SetPropertyFromElement(projectElement, "Version", value => Version = value);
+        _ = SetPropertyFromElement(projectElement, "AssemblyVersion", value => AssemblyVersion = value);
+        _ = SetPropertyFromElement(projectElement, "FileVersion", value => FileVersion = value);
     }
 
     private void ParseProjectElementInfo(XElement projectElement)
     {
-        XElement? AuthorElement = projectElement.Element("Authors");
-        if (AuthorElement is not null)
-            Author = AuthorElement.Value;
-
-        XElement? DescriptionElement = projectElement.Element("Description");
-        if (DescriptionElement is not null)
-            Description = DescriptionElement.Value;
-
-        XElement? CopyrightElement = projectElement.Element("Copyright");
-        if (CopyrightElement is not null)
-            Copyright = CopyrightElement.Value;
-
-        XElement? RepositoryUrlElement = projectElement.Element("RepositoryUrl");
-        if (RepositoryUrlElement is not null)
-            RepositoryUrl = new Uri(RepositoryUrlElement.Value);
-
-        XElement? ApplicationIconElement = projectElement.Element("ApplicationIcon");
-        if (ApplicationIconElement is not null)
-            ApplicationIcon = ApplicationIconElement.Value;
-
-        XElement? PackageIconElement = projectElement.Element("PackageIcon");
-        if (PackageIconElement is not null)
-            PackageIcon = PackageIconElement.Value;
-
-        XElement? PackageLicenseExpressionElement = projectElement.Element("PackageLicenseExpression");
-        if (PackageLicenseExpressionElement is not null)
-            PackageLicenseExpression = PackageLicenseExpressionElement.Value;
-
-        XElement? PackageReadmeFileElement = projectElement.Element("PackageReadmeFile");
-        if (PackageReadmeFileElement is not null)
-            PackageReadmeFile = PackageReadmeFileElement.Value;
+        _ = SetPropertyFromElement(projectElement, "Authors", value => Author = value);
+        _ = SetPropertyFromElement(projectElement, "Description", value => Description = value);
+        _ = SetPropertyFromElement(projectElement, "Copyright", value => Copyright = value);
+        _ = SetPropertyFromElement(projectElement, "RepositoryUrl", value => RepositoryUrl = new Uri(value));
+        _ = SetPropertyFromElement(projectElement, "ApplicationIcon", value => ApplicationIcon = value);
+        _ = SetPropertyFromElement(projectElement, "PackageIcon", value => PackageIcon = value);
+        _ = SetPropertyFromElement(projectElement, "PackageLicenseExpression", value => PackageLicenseExpression = value);
+        _ = SetPropertyFromElement(projectElement, "PackageReadmeFile", value => PackageReadmeFile = value);
     }
 
     private void ParseProjectElementFrameworks(XElement projectElement)
     {
-        XElement? TargetFrameworkElement = projectElement.Element("TargetFramework");
-        if (TargetFrameworkElement is not null)
+        if (!SetPropertyFromElement(projectElement, "TargetFramework", value => TargetFrameworks = value))
+            _ = SetPropertyFromElement(projectElement, "TargetFrameworks", value => TargetFrameworks = value);
+    }
+
+    private static bool SetPropertyFromElement(XElement element, string key, Action<string> setter)
+    {
+        XElement? Item = element.Element(key);
+        if (Item is not null)
         {
-            TargetFrameworks = TargetFrameworkElement.Value;
+            setter(Item.Value);
+            return true;
         }
         else
         {
-            XElement? TargetFrameworksElement = projectElement.Element("TargetFrameworks");
-            if (TargetFrameworksElement is not null)
-                TargetFrameworks = TargetFrameworksElement.Value;
+            return false;
         }
     }
+
+    private static bool IsStringTrue(string value)
+        => string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsStringFalse(string value)
+        => string.Equals(value, "false", StringComparison.OrdinalIgnoreCase);
 
     private void ParseTargetFrameworks(List<Framework> parsedFrameworkList)
     {

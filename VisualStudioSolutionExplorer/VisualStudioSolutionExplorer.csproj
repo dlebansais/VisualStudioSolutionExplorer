@@ -7,9 +7,9 @@
         <Platforms>x64</Platforms>
         
         <RootNamespace>SlnExplorer</RootNamespace>
-        <Version>2.2.0</Version>
-        <AssemblyVersion>2.2.0.71</AssemblyVersion>
-        <FileVersion>2.2.0.71</FileVersion>
+        <Version>2.2.1</Version>
+        <AssemblyVersion>2.2.1.72</AssemblyVersion>
+        <FileVersion>2.2.1.72</FileVersion>
         <Authors>David Le Bansais</Authors>
         <Product />
         <Description>Explore .sln files</Description>
@@ -48,7 +48,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="dlebansais.IDisposableAnalyzers" Version="4.0.8.10">
+        <PackageReference Include="dlebansais.IDisposableAnalyzers" Version="4.0.8.16">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -63,24 +63,22 @@
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Method.Contracts.Analyzers-Debug" Version="2.0.0" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+        <PackageReference Include="Method.Contracts.Analyzers-Debug" Version="2.0.1" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Method.Contracts.Analyzers" Version="2.0.0" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'">
+        <PackageReference Include="Method.Contracts.Analyzers" Version="2.0.1" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
-        <PackageReference Include="Method.Contracts-Debug" Version="2.0.0" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
-        <PackageReference Include="Method.Contracts" Version="2.0.0" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
+        <PackageReference Include="Method.Contracts-Debug" Version="2.0.1" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+        <PackageReference Include="Method.Contracts" Version="2.0.1" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
-        <PackageReference Include="Microsoft.Build" Version="17.11.4" />
-    </ItemGroup>
-    <ItemGroup Condition="'$(TargetFramework)'=='net9.0'">
-        <PackageReference Include="Microsoft.Build" Version="17.12.6" />
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Build" Version="17.11.4" Condition="'$(TargetFramework)'=='net8.0'" />
+        <PackageReference Include="Microsoft.Build" Version="17.12.6" Condition="'$(TargetFramework)'=='net9.0'" />
     </ItemGroup>
 
     <Target Name="_ResolveCopyLocalNuGetPackagePdbsAndXml" Condition="$(CopyLocalLockFileAssemblies) == true" AfterTargets="ResolveReferences">

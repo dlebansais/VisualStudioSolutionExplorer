@@ -48,11 +48,11 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="dlebansais.IDisposableAnalyzers" Version="4.0.8.16">
+        <PackageReference Include="dlebansais.IDisposableAnalyzers" Version="4.0.8.17">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="dlebansais.CSharpLatest" Version="2.1.2">
+        <PackageReference Include="dlebansais.CSharpLatest" Version="2.1.4">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

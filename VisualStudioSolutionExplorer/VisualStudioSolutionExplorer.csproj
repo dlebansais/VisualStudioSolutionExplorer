@@ -8,8 +8,8 @@
         
         <RootNamespace>SlnExplorer</RootNamespace>
         <Version>2.2.2</Version>
-        <AssemblyVersion>2.2.2.73</AssemblyVersion>
-        <FileVersion>2.2.2.73</FileVersion>
+        <AssemblyVersion>2.2.2.75</AssemblyVersion>
+        <FileVersion>2.2.2.75</FileVersion>
         <Authors>David Le Bansais</Authors>
         <Product />
         <Description>Explore .sln files</Description>

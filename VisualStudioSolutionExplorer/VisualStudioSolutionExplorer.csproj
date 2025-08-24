@@ -7,9 +7,9 @@
         <Platforms>x64</Platforms>
         
         <RootNamespace>SlnExplorer</RootNamespace>
-        <Version>2.2.3</Version>
-        <AssemblyVersion>2.2.3.75</AssemblyVersion>
-        <FileVersion>2.2.3.75</FileVersion>
+        <Version>2.2.4</Version>
+        <AssemblyVersion>2.2.4.76</AssemblyVersion>
+        <FileVersion>2.2.4.76</FileVersion>
         <Authors>David Le Bansais</Authors>
         <Product />
         <Description>Explore .sln files</Description>
@@ -30,6 +30,8 @@
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <PackageLicenseExpression>0BSD</PackageLicenseExpression>
+        <PackageIcon>package-icon.png</PackageIcon>
+        <PackageReadmeFile>README-short.md</PackageReadmeFile>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(APPVEYOR)' == 'True'">

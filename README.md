@@ -2,6 +2,11 @@
 
 Explore .sln files and their projects in a tree view.
 
+[![Build status](https://ci.appveyor.com/api/projects/status/stixu2yns30krvk7?svg=true)](https://ci.appveyor.com/project/dlebansais/visualstudiosolutionexplorer)
+[![codecov](https://codecov.io/gh/dlebansais/VisualStudioSolutionExplorer/graph/badge.svg?token=749K1xHedB)](https://codecov.io/gh/dlebansais/VisualStudioSolutionExplorer)
+[![CodeFactor](https://www.codefactor.io/repository/github/dlebansais/visualstudiosolutionexplorer/badge)](https://www.codefactor.io/repository/github/dlebansais/visualstudiosolutionexplorer)
+[![NuGet](https://img.shields.io/nuget/v/dlebansais.VisualStudioSolutionExplorer.svg)](https://www.nuget.org/packages/dlebansais.VisualStudioSolutionExplorer)
+
 ## Usage
 
 To start, create a `Solution` object providing the path to the solution file:

@@ -69,7 +69,7 @@ public class Framework
     }
 
     /// <summary>
-    /// Gets the framework type.
+    /// Gets the framework name.
     /// </summary>
     public string Name { get; init; }
 

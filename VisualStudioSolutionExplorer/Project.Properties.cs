@@ -79,12 +79,12 @@ public partial class Project
     public string OutputType { get; private set; } = string.Empty;
 
     /// <summary>
-    /// Gets a value indicating whether the projct uses WPF.
+    /// Gets a value indicating whether the project uses WPF.
     /// </summary>
     public bool UseWpf { get; private set; }
 
     /// <summary>
-    /// Gets a value indicating whether the projct uses Windows Forms.
+    /// Gets a value indicating whether the project uses Windows Forms.
     /// </summary>
     public bool UseWindowsForms { get; private set; }
 

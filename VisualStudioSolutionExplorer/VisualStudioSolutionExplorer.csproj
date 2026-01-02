@@ -13,7 +13,7 @@
         <Authors>David Le Bansais</Authors>
         <Product />
         <Description>Explore .sln files</Description>
-        <Copyright>Copyright © 2025 David Le Bansais</Copyright>
+        <Copyright>Copyright © 2026 David Le Bansais</Copyright>
         <RepositoryUrl>https://github.com/dlebansais/VisualStudioSolutionExplorer</RepositoryUrl>
 
         <NeutralLanguage>en-US</NeutralLanguage>
@@ -64,7 +64,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="dlebansais.CSharpLatest" Version="2.4.0">
+        <PackageReference Include="dlebansais.CSharpLatest" Version="2.4.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

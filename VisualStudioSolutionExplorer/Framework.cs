@@ -103,9 +103,6 @@ public class Framework
     /// </summary>
     public int MonikerMinor { get; init; }
 
-    /// <summary>
-    /// Returns a string that represents the current object.
-    /// </summary>
-    /// <returns>The current object as a string.</returns>
+    /// <inheritdoc />
     public override string ToString() => Name;
 }

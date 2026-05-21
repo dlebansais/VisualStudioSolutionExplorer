@@ -26,6 +26,8 @@ internal static class TestTools
                 "net8.0-windows7.0",
                 "net9.0",
                 "net9.0-windows7.0",
+                "net10.0",
+                "net10.0-windows7.0",
                 "Debug",
                 "Release",
                 "x64",

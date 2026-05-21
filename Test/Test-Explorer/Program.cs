@@ -17,8 +17,8 @@ public static class Program
         Console.WriteLine($"Current directory: {Environment.CurrentDirectory}");
 #if NET481
         Console.WriteLine($"Framework: net481");
-#elif NET8_0
-        Console.WriteLine($"Framework: net8.0");
+#elif NET10_0
+        Console.WriteLine($"Framework: net10.0");
 #endif
         Console.WriteLine();
 

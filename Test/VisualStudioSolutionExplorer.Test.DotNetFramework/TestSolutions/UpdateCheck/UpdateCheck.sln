@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateCheck", "UpdateCheck\UpdateCheck.csproj", "{FFC48093-7095-4AAB-AA63-337713BE2261}"
+	ProjectSection(ProjectDependencies) = postProject
+		{ECB6AD78-D26C-4A1E-BE08-A4062B42A8E8} = {ECB6AD78-D26C-4A1E-BE08-A4062B42A8E8}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F04B3A36-60DE-4A1F-8D47-9EE7AA9ED814}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PreBuild", "PreBuild\PreBuild.csproj", "{ECB6AD78-D26C-4A1E-BE08-A4062B42A8E8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateCheck.Demo", "Demo\UpdateCheck.Demo\UpdateCheck.Demo.csproj", "{8351B142-FE1A-4116-9C89-2B4B71FC906A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateCheck.Test", "Test\UpdateCheck.Test\UpdateCheck.Test.csproj", "{D40F93F2-EA0F-42DD-9E71-B1D1D5B14908}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestTools", "Test\TestTools\TestTools.csproj", "{87D4F941-6132-48CC-A5F6-FF574176078D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FFC48093-7095-4AAB-AA63-337713BE2261}.Debug|x64.ActiveCfg = Debug|x64
+		{FFC48093-7095-4AAB-AA63-337713BE2261}.Debug|x64.Build.0 = Debug|x64
+		{FFC48093-7095-4AAB-AA63-337713BE2261}.Release|x64.ActiveCfg = Release|x64
+		{FFC48093-7095-4AAB-AA63-337713BE2261}.Release|x64.Build.0 = Release|x64
+		{ECB6AD78-D26C-4A1E-BE08-A4062B42A8E8}.Debug|x64.ActiveCfg = Debug|x64
+		{ECB6AD78-D26C-4A1E-BE08-A4062B42A8E8}.Debug|x64.Build.0 = Debug|x64
+		{ECB6AD78-D26C-4A1E-BE08-A4062B42A8E8}.Release|x64.ActiveCfg = Release|x64
+		{ECB6AD78-D26C-4A1E-BE08-A4062B42A8E8}.Release|x64.Build.0 = Release|x64
+		{8351B142-FE1A-4116-9C89-2B4B71FC906A}.Debug|x64.ActiveCfg = Debug|x64
+		{8351B142-FE1A-4116-9C89-2B4B71FC906A}.Debug|x64.Build.0 = Debug|x64
+		{8351B142-FE1A-4116-9C89-2B4B71FC906A}.Release|x64.ActiveCfg = Release|x64
+		{8351B142-FE1A-4116-9C89-2B4B71FC906A}.Release|x64.Build.0 = Release|x64
+		{D40F93F2-EA0F-42DD-9E71-B1D1D5B14908}.Debug|x64.ActiveCfg = Debug|x64
+		{D40F93F2-EA0F-42DD-9E71-B1D1D5B14908}.Debug|x64.Build.0 = Debug|x64
+		{D40F93F2-EA0F-42DD-9E71-B1D1D5B14908}.Release|x64.ActiveCfg = Release|x64
+		{D40F93F2-EA0F-42DD-9E71-B1D1D5B14908}.Release|x64.Build.0 = Release|x64
+		{87D4F941-6132-48CC-A5F6-FF574176078D}.Debug|x64.ActiveCfg = Debug|x64
+		{87D4F941-6132-48CC-A5F6-FF574176078D}.Debug|x64.Build.0 = Debug|x64
+		{87D4F941-6132-48CC-A5F6-FF574176078D}.Release|x64.ActiveCfg = Release|x64
+		{87D4F941-6132-48CC-A5F6-FF574176078D}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {73EC88C0-B946-4623-9A8C-08C37DB0DF4E}
+	EndGlobalSection
+EndGlobal

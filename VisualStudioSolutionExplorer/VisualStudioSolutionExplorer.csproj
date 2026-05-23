@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net481;net10.0</TargetFrameworks>
+        <TargetFrameworks>net481;net8.0;net10.0</TargetFrameworks>
         <LangVersion>14</LangVersion>
         <Nullable>enable</Nullable>
         <Platforms>x64</Platforms>
         
         <RootNamespace>SlnExplorer</RootNamespace>
-        <Version>2.2.5</Version>
-        <AssemblyVersion>2.2.5.77</AssemblyVersion>
-        <FileVersion>2.2.5.77</FileVersion>
+        <Version>2.2.6</Version>
+        <AssemblyVersion>2.2.6.78</AssemblyVersion>
+        <FileVersion>2.2.6.78</FileVersion>
         <Authors>David Le Bansais</Authors>
         <Product />
         <Description>Explore .sln files</Description>
@@ -84,12 +84,12 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
-        <PackageReference Include="dlebansais.Method.Contracts-Debug" Version="2.0.5" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
-        <PackageReference Include="dlebansais.Method.Contracts" Version="2.0.6" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
+        <PackageReference Include="dlebansais.Method.Contracts-Debug" Version="2.0.7" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+        <PackageReference Include="dlebansais.Method.Contracts" Version="2.0.7" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Build" Version="17.11.48" Condition="'$(TargetFramework)'=='net10.0'" />
+        <PackageReference Include="Microsoft.Build" Version="17.11.48" Condition="'$(TargetFramework)'=='net8.0' Or '$(TargetFramework)'=='net10.0'" />
     </ItemGroup>
 
     <Target Name="_ResolveCopyLocalNuGetPackagePdbsAndXml" Condition="$(CopyLocalLockFileAssemblies) == true" AfterTargets="ResolveReferences">

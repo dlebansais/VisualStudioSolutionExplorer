@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.10.34916.146
+# Visual Studio Version 18
+VisualStudioVersion = 18.6.11819.183 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisualStudioSolutionExplorer", "VisualStudioSolutionExplorer\VisualStudioSolutionExplorer.csproj", "{A005B2B1-1D4B-4B86-AB31-12DDAAFA9ECF}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -18,6 +18,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test-Explorer", "Test\Test-Explorer\Test-Explorer.csproj", "{3D55BC7C-885B-49D1-B019-A0D8F6FC7B08}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisualStudioSolutionExplorer.Test", "Test\VisualStudioSolutionExplorer.Test\VisualStudioSolutionExplorer.Test.csproj", "{E45177DD-A714-484D-8F4E-801B07F76F84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStudioSolutionExplorer.Test.DotNetFramework", "Test\VisualStudioSolutionExplorer.Test.DotNetFramework\VisualStudioSolutionExplorer.Test.DotNetFramework.csproj", "{F38845F3-AF91-2FB3-E2F5-7A1F6354D24A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{E45177DD-A714-484D-8F4E-801B07F76F84}.Debug|x64.Build.0 = Debug|x64
 		{E45177DD-A714-484D-8F4E-801B07F76F84}.Release|x64.ActiveCfg = Release|x64
 		{E45177DD-A714-484D-8F4E-801B07F76F84}.Release|x64.Build.0 = Release|x64
+		{F38845F3-AF91-2FB3-E2F5-7A1F6354D24A}.Debug|x64.ActiveCfg = Debug|x64
+		{F38845F3-AF91-2FB3-E2F5-7A1F6354D24A}.Debug|x64.Build.0 = Debug|x64
+		{F38845F3-AF91-2FB3-E2F5-7A1F6354D24A}.Release|x64.ActiveCfg = Release|x64
+		{F38845F3-AF91-2FB3-E2F5-7A1F6354D24A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

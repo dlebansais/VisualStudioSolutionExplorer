@@ -18,7 +18,13 @@ internal partial class TestVisualStudioSolutionExplorer
         string RootPath = Path.Combine(TestTools.GetExecutingProjectRootPath(), TestSolutionsFolder);
         const string TestSolution = "Method.Contracts";
 
-        string SolutionPath = Path.Combine(RootPath, TestSolution, $"{TestSolution}.sln");
+#if NET10_0_OR_GREATER
+        const string SolutionExtension = "slnx";
+#else
+        const string SolutionExtension = "sln";
+#endif
+
+        string SolutionPath = Path.Combine(RootPath, TestSolution, $"{TestSolution}.{SolutionExtension}");
         Solution NewSolution = new(SolutionPath);
 
         Assert.That(NewSolution.Name, Is.EqualTo(TestSolution));
@@ -125,7 +131,13 @@ internal partial class TestVisualStudioSolutionExplorer
         string RootPath = Path.Combine(TestTools.GetExecutingProjectRootPath(), TestSolutionsFolder);
         const string TestSolution = "Method.Contracts";
 
-        string SolutionPath = Path.Combine(RootPath, TestSolution, $"{TestSolution}.sln");
+#if NET10_0_OR_GREATER
+        const string SolutionExtension = "slnx";
+#else
+        const string SolutionExtension = "sln";
+#endif
+
+        string SolutionPath = Path.Combine(RootPath, TestSolution, $"{TestSolution}.{SolutionExtension}");
         using FileStream Stream = new(SolutionPath, FileMode.Open, FileAccess.Read);
         using StreamReader Reader = new(Stream);
 
@@ -141,7 +153,13 @@ internal partial class TestVisualStudioSolutionExplorer
         string RootPath = Path.Combine(TestTools.GetExecutingProjectRootPath(), TestSolutionsFolder);
         const string TestSolution = "Method.Contracts";
 
-        Solution NewSolution = new(Path.Combine(RootPath, TestSolution, $"{TestSolution}.sln"));
+#if NET10_0_OR_GREATER
+        const string SolutionExtension = "slnx";
+#else
+        const string SolutionExtension = "sln";
+#endif
+
+        Solution NewSolution = new(Path.Combine(RootPath, TestSolution, $"{TestSolution}.{SolutionExtension}"));
 
         Assert.That(NewSolution.Name, Is.EqualTo(TestSolution));
 

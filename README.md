@@ -1,6 +1,6 @@
 # VisualStudioSolutionExplorer
 
-Explore .sln files and their projects in a tree view.
+Explore .sln and .slnx files and their projects in a tree view.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/stixu2yns30krvk7?svg=true)](https://ci.appveyor.com/project/dlebansais/visualstudiosolutionexplorer)
 [![codecov](https://codecov.io/gh/dlebansais/VisualStudioSolutionExplorer/graph/badge.svg?token=749K1xHedB)](https://codecov.io/gh/dlebansais/VisualStudioSolutionExplorer)

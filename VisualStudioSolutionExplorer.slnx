@@ -1,0 +1,24 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
+  <Project Path="PreBuild/PreBuild.csproj">
+    <Platform Project="x64" />
+  </Project>
+  <Project Path="Test/Test-Explorer/Test-Explorer.csproj">
+    <Platform Project="x64" />
+  </Project>
+  <Project Path="Test/VisualStudioSolutionExplorer.Test.DotNetFramework/VisualStudioSolutionExplorer.Test.DotNetFramework.csproj">
+    <Platform Project="x64" />
+  </Project>
+  <Project Path="Test/VisualStudioSolutionExplorer.Test/VisualStudioSolutionExplorer.Test.csproj">
+    <Platform Project="x64" />
+  </Project>
+  <Project Path="VisualStudioSolutionExplorer/VisualStudioSolutionExplorer.csproj">
+    <BuildDependency Project="PreBuild/PreBuild.csproj" />
+    <Platform Project="x64" />
+  </Project>
+</Solution>

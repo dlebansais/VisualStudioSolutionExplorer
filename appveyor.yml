@@ -26,6 +26,8 @@ environment:
   opencover_version: 4.7.1221
   codecov_uploader_version: 0.8.0
   report_generator_version: 5.5.10
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  CUSTOM_PACKAGER_OPTIONS: "[]"           # Override in settings -> Environment -> Environment variables
   PACKAGE_PREFIX: dlebansais
 
 matrix:
@@ -33,8 +35,12 @@ matrix:
   fast_finish: true
 
 before_build:
-  - nuget restore %APPVEYOR_PROJECT_NAME%.sln
+  - nuget restore %APPVEYOR_PROJECT_NAME%.slnx
   - nuget install dlebansais.GitCommitId -DependencyVersion Highest -OutputDirectory packages
+  - nuget install dlebansais.Packager -DependencyVersion Highest -OutputDirectory packages
+  - nuget install OpenCover -Version %opencover_version% -OutputDirectory packages
+  - nuget install CodecovUploader -Version %codecov_uploader_version% -OutputDirectory packages
+  - nuget install ReportGenerator -Version %report_generator_version% -OutputDirectory packages
   - dotnet restore
 # Extract signing.snk to the current directory. Do not extract for a PR because they don't have access to secrets, but we don't need to sign assemblies in that case.
   - if '%APPVEYOR_PULL_REQUEST_NUMBER%'=='' C:/PROGRA~1/7-Zip/7z.exe e -p%SnkPassword% .signing\key.zip > nul
@@ -44,29 +50,31 @@ configuration:
   - Debug
 
 build:
-  project: $(APPVEYOR_PROJECT_NAME).sln
+  project: $(APPVEYOR_PROJECT_NAME).slnx
 
 after_build:
-  - nuget install dlebansais.Packager -Version 2.1.2 -OutputDirectory packages # Install Packager
-  - ps: $folder = Get-ChildItem -Path packages/dlebansais.Packager.* -Name | Out-String    # Get the installation folder (we don't know the actual version)
-  - ps: $firstline = ($folder -split '\r\n')[0]                                            # Get rid of carriage-return
-  - ps: $fullpath = ".\packages\$firstline\lib\net481\Packager.exe"                        # Build full path
-  - ps: $env:PACKAGER_PATH=$fullpath
-  - '%PACKAGER_PATH% %CUSTOM_PACKAGER_OPTIONS% --prefix=%PACKAGE_PREFIX%'                  # Execute the packager: the output is nuget\%PACKAGE_PREFIX%.%APPVEYOR_PROJECT_NAME%.nuspec
-  - if exist nuget\%PACKAGE_PREFIX%.%APPVEYOR_PROJECT_NAME%.nuspec nuget pack nuget\%PACKAGE_PREFIX%.%APPVEYOR_PROJECT_NAME%.nuspec
-  - '%PACKAGER_PATH% %CUSTOM_PACKAGER_OPTIONS% --prefix=%PACKAGE_PREFIX% --debug'          # Execute the packager: the output is nuget-debug\%PACKAGE_PREFIX%.%APPVEYOR_PROJECT_NAME%-Debug.nuspec
-  - if exist nuget-debug\%PACKAGE_PREFIX%.%APPVEYOR_PROJECT_NAME%-Debug.nuspec nuget pack nuget-debug\%PACKAGE_PREFIX%.%APPVEYOR_PROJECT_NAME%-Debug.nuspec
-  - ps: $xml = [xml](Get-Content .\$env:APPVEYOR_PROJECT_NAME\$env:APPVEYOR_PROJECT_NAME.csproj)
-  - ps: $version=$xml.Project.PropertyGroup.Version
-  - ps: set version_tag v$version
-  - ps: $version_tag=$version_tag.Trim()
-  - ps: $env:VERSION_TAG=$version_tag
+  - ps: |
+      $folder = Get-ChildItem -Path packages/dlebansais.Packager.* -Name | Out-String    # Get the installation folder (we don't know the actual version)
+      $firstline = ($folder -split '\r\n')[0]                                            # Get rid of carriage-return
+      $fullpath = ".\packages\$firstline\tools\net10.0-windows7.0\Packager.exe"          # Build full path
+      $options = $env:CUSTOM_PACKAGER_OPTIONS | ConvertFrom-Json                         # Get options as JSON array
+      if ($env:CONFIGURATION -eq 'Release') {
+        & $fullpath $options --prefix=$env:PACKAGE_PREFIX                                # Execute the packager: the output is nuget\%PACKAGE_PREFIX%.%APPVEYOR_PROJECT_NAME%.nuspec
+        if ($LastExitCode -lt 0) { exit 1 }
+        nuget pack "nuget\$env:PACKAGE_PREFIX.$env:APPVEYOR_PROJECT_NAME.nuspec"
+      } else {
+        & $fullpath $options --prefix=$env:PACKAGE_PREFIX --debug                        # Execute the packager: the output is nuget-debug\%PACKAGE_PREFIX%.%APPVEYOR_PROJECT_NAME%-Debug.nuspec
+        if ($LastExitCode -lt 0) { exit 1 }
+        nuget pack "nuget-debug\$env:PACKAGE_PREFIX.$env:APPVEYOR_PROJECT_NAME-Debug.nuspec"
+      }
+      $xml = [xml](Get-Content .\$env:APPVEYOR_PROJECT_NAME\$env:APPVEYOR_PROJECT_NAME.csproj)
+      $version=$xml.Project.PropertyGroup.Version
+      set version_tag v$version
+      $version_tag=$version_tag.Trim()
+      $env:VERSION_TAG=$version_tag
   - echo Version is "%VERSION_TAG%"
 
 before_test:
-  - nuget install OpenCover -Version %opencover_version% -OutputDirectory packages
-  - nuget install CodecovUploader -Version %codecov_uploader_version% -OutputDirectory packages
-  - nuget install ReportGenerator -Version %report_generator_version% -OutputDirectory packages
   - |-
     printf "pushd .\Test\%APPVEYOR_PROJECT_NAME%.Test && dotnet test --test-modules ./bin/x64/%CONFIGURATION%/net10.0/%APPVEYOR_PROJECT_NAME%.Test.dll --output:detailed && popd\n" > run-tests.bat
     printf "pushd .\Test\%APPVEYOR_PROJECT_NAME%.Test.DotNetFramework && dotnet test ./bin/x64/%CONFIGURATION%/net481/%APPVEYOR_PROJECT_NAME%.Test.DotNetFramework.dll -l console;verbosity=detailed && popd\n" >> run-tests.bat
@@ -78,9 +86,7 @@ before_test:
   - |-
     printf ".\packages\CodecovUploader.%codecov_uploader_version%\Tools\Codecov.exe -f ""Coverage-%APPVEYOR_PROJECT_NAME%.xml""\n" > after-test.bat
     printf ".\packages\ReportGenerator.%report_generator_version%\Tools\Net8.0\ReportGenerator.exe ""-reports:Coverage-%APPVEYOR_PROJECT_NAME%.xml"" -targetdir:.\CoverageReports ""-assemblyfilters:-Microsoft*;+%APPVEYOR_PROJECT_NAME%"" ""-filefilters:-*.g.cs"" -reporttypes:textsummary\n" >> after-test.bat
-    printf "if not exist .\CoverageReports\Summary.txt exit /b -10\n" >> after-test.bat
-    printf "powershell $opencover_summary = Get-Content .\CoverageReports\Summary.txt -Raw ; Write-Output $opencover_summary ; $pattern = 'Branch coverage' + [char]0x003A + ' 100' + [char]0x0025 ; if ($opencover_summary -NotMatch $pattern) { Remove-Item .\CoverageReports\Summary.txt -Force }\n" >> after-test.bat
-    printf "if not exist .\CoverageReports\Summary.txt exit /b -11\n" >> after-test.bat
+    printf "powershell $ErrorActionPreference = 'Stop'; $opencover_summary = Get-Content .\CoverageReports\Summary.txt -Raw ; Write-Output $opencover_summary ; $pattern = 'Branch coverage' + [char]0x003A + ' 100' + [char]0x0025 ; if ($opencover_summary -NotMatch $pattern) { exit -1 }\n" >> after-test.bat
 
 test_script:
   - if '%APPVEYOR_REPO_BRANCH%' == 'master' call opencover.bat run-tests1.bat

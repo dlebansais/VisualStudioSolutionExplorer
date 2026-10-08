@@ -19,6 +19,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.VisualStudio.SolutionPersistence" Version="1.0.52" Condition="'$(TargetFramework)'=='net10.0-windows7.0'" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\..\VisualStudioSolutionExplorer\VisualStudioSolutionExplorer.csproj" />
     </ItemGroup>
 

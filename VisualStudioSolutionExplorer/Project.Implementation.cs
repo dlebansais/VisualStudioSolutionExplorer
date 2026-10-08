@@ -140,6 +140,8 @@ public partial class Project
         _ = SetPropertyFromElement(projectElement, "PackageIcon", value => PackageIcon = value);
         _ = SetPropertyFromElement(projectElement, "PackageLicenseExpression", value => PackageLicenseExpression = value);
         _ = SetPropertyFromElement(projectElement, "PackageReadmeFile", value => PackageReadmeFile = value);
+        _ = SetPropertyFromElement(projectElement, "Title", value => Title = value);
+        _ = SetPropertyFromElement(projectElement, "PackageTags", value => PackageTags = value);
     }
 
     private void ParseProjectElementFrameworks(XElement projectElement)

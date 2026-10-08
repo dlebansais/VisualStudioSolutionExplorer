@@ -9,6 +9,7 @@
         <RootNamespace>Contracts</RootNamespace>
         <Version>1.4.2</Version>
         <Authors>David Le Bansais</Authors>
+        <Title>A set of tools to enforce contracts in methods</Title>
         <Company />
         <Product />
         <Description>A set of tools to enforce contracts in methods</Description>

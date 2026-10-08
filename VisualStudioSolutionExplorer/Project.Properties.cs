@@ -124,6 +124,11 @@ public partial class Project
     public string Author { get; private set; } = string.Empty;
 
     /// <summary>
+    /// Gets the project title.
+    /// </summary>
+    public string Title { get; private set; } = string.Empty;
+
+    /// <summary>
     /// Gets the project description.
     /// </summary>
     public string Description { get; private set; } = string.Empty;
@@ -217,4 +222,9 @@ public partial class Project
     /// Gets the project package readme.
     /// </summary>
     public string PackageReadmeFile { get; private set; } = string.Empty;
+
+    /// <summary>
+    /// Gets the project package tags.
+    /// </summary>
+    public string PackageTags { get; private set; } = string.Empty;
 }

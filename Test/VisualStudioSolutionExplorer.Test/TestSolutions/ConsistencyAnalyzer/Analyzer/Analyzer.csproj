@@ -22,6 +22,7 @@
         <PackageIcon>main.png</PackageIcon>
         <PackageLicenseExpression>0BSD</PackageLicenseExpression>
         <PackageReadmeFile>README-short.md</PackageReadmeFile>
+        <PackageTags>Consistency;Analyzer</PackageTags>
 
         <!-- Avoid ID conflicts with the package project. -->
         <PackageId>*$(MSBuildProjectFullPath)*</PackageId>

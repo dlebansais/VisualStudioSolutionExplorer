@@ -22,14 +22,14 @@ public static class Program
 #endif
         Console.WriteLine();
 
-        string[] Directories = Directory.GetDirectories(@"C:\Projects");
+        string[] Directories = Directory.GetDirectories(@"C:\Projects\C-Sharp-V");
         foreach (string Directory in Directories)
         {
             if (!Directory.EndsWith(SolutionNameArg))
                 continue;
 
             string RootPath = @$"{Directory}\";
-            string SolutionName = Path.GetFileName(Directory) + ".sln";
+            string SolutionName = Path.GetFileName(Directory) + ".slnx";
             if (File.Exists($"{RootPath}{SolutionName}"))
             {
                 Solution NewSolution = new(Path.Combine(RootPath, SolutionName));
@@ -91,6 +91,7 @@ public static class Program
         Console.WriteLine($"      Has File:       {(project.IsFileVersionValid ? "Yes" : "No")}");
         Console.WriteLine($"      File:           {project.FileVersion}");
         Console.WriteLine($"    Author:           {project.Author}");
+        Console.WriteLine($"    Title:            {project.Title}");
         Console.WriteLine($"    Description:      {project.Description}");
         Console.WriteLine($"    Copyright:        {project.Copyright}");
         Console.WriteLine($"    Repository Url:   {(project.RepositoryUrl is null ? "None" : project.RepositoryUrl)}");
@@ -98,6 +99,7 @@ public static class Program
         Console.WriteLine($"    Package Icon:     {project.PackageIcon}");
         Console.WriteLine($"    Package License:  {project.PackageLicenseExpression}");
         Console.WriteLine($"    Package readme:   {project.PackageReadmeFile}");
+        Console.WriteLine($"    Package tags:     {project.PackageTags}");
 
         DisplayProjectPropertiesFrameworkList(project.FrameworkList);
 
